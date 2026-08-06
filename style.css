@@ -1,0 +1,656 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+html,
+body,
+* {
+    cursor: none !important;
+}
+
+img,
+video {
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+
+}
+
+:root {
+
+    /* Colors */
+
+    --color-bg: #000000;
+
+    --color-white: #ffffff;
+
+    --color-border: rgba(255, 255, 255, .8);
+
+    --color-overlay: rgba(0, 0, 0, .5);
+
+    --color-ring-bg: rgba(255, 255, 255, .15);
+
+    --color-system: #8AFF8A;
+
+    --color-monitor: #111111;
+
+    /* Font */
+
+    --font-main: "JetBrains Mono", "Pretendard", sans-serif;
+
+    --font-mono: "JetBrains Mono", monospace;
+
+    /* Font Size */
+
+    --font-xs: 9px;
+
+    --font-sm: 12px;
+
+    --font-progress: 12px;
+
+    /* Border */
+
+    --border: 0.5px solid var(--color-border);
+
+    /* Cursor */
+
+    --cursor-size: 48px;
+
+    --ring-size: 48px;
+
+    --ring-radius: 18;
+
+    --ring-length: 113;
+
+    --cursor-offset: 24px;
+
+    --info-panel-offset: 8px;
+
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+
+    background: var(--color-bg);
+
+    height: 100vh;
+
+    overflow: hidden;
+
+    font-family: var(--font-main);
+
+    cursor: none;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+}
+
+.monitor-wall {
+
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
+    gap: 0;
+    padding: 0;
+}
+
+.monitor {
+
+    position: relative;
+
+    overflow: hidden;
+
+    cursor: none;
+
+    background: var(--color-monitor);
+
+    border: var(--border);
+
+    transition: .3s;
+}
+
+.monitor:hover {
+
+    border-color: var(--color-system);
+
+    border-width: 2px;
+
+    z-index: 10;
+}
+
+.monitor video {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    user-select: none;
+    -webkit-user-drag: none;
+
+}
+
+.label {
+
+    position: absolute;
+
+    top: 8px;
+    left: 8px;
+
+    color: var(--color-white);
+
+    font-size: var(--font-sm);
+
+    background: var(--color-overlay);
+
+    border: var(--border);
+
+    padding: 6px 10px;
+
+}
+
+.cam-id {
+
+    font-size: var(--font-sm);
+
+    font-family: var(--font-mono);
+
+}
+
+/* ===========================
+   CROSSHAIR
+=========================== */
+
+#crosshair {
+
+    position: fixed;
+
+    width: 20px;
+    height: 20px;
+
+    pointer-events: none;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 30000;
+
+}
+
+#crosshair .line {
+
+    position: absolute;
+
+    background: var(--color-system);
+
+}
+
+#crosshair .horizontal {
+
+    top: 50%;
+    left: 0;
+
+    width: 20px;
+    height: 1px;
+
+    transform: translateY(-50%);
+
+}
+
+#crosshair .vertical {
+
+    top: 0;
+    left: 50%;
+
+    width: 1px;
+    height: 20px;
+
+    transform: translateX(-50%);
+
+}
+
+/* ===========================
+   CURSOR UI
+=========================== */
+
+#cursor-ui {
+
+    position: fixed;
+
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+
+    pointer-events: none;
+
+    transform: translate(-50%, -50%);
+
+    display: none;
+
+    z-index: 300001;
+
+}
+
+.progress-ring {
+
+    width: 100%;
+    height: 100%;
+
+    transform: rotate(-90deg);
+
+    transition: opacity .2s ease;
+
+}
+
+.ring-bg {
+
+    fill: none;
+
+    stroke: var(--color-ring-bg);
+
+    stroke-width: 2;
+
+}
+
+.ring {
+
+    fill: none;
+
+    stroke: var(--color-system);
+
+    stroke-width: 2;
+
+    stroke-linecap: round;
+
+    stroke-dasharray: var(--ring-length);
+
+    stroke-dashoffset: var(--ring-length);
+
+}
+
+#progress-text {
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: var(--color-system);
+
+    font-size: var(--font-progress);
+
+    font-family: var(--font-mono);
+
+    pointer-events: none;
+
+    user-select: none;
+
+    transition: opacity .2s ease;
+
+}
+
+/* ===========================
+   INFO PANEL
+=========================== */
+
+#info-panel {
+
+    position: fixed;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+        translateY(var(--info-panel-offset)) scale(.97);
+
+    min-width: 180px;
+
+    max-width: 360px;
+
+    padding: 18px;
+
+    background: rgba(0, 0, 0, .82);
+
+    border: 1px solid var(--color-system);
+
+    backdrop-filter: blur(12px);
+
+    color: var(--color-system);
+
+    pointer-events: none;
+
+    z-index: 10000;
+
+}
+
+#info-panel.show {
+
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+        translateY(0) scale(1);
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease,
+        visibility 0s;
+
+}
+
+#info-cam {
+
+    font-size: 11px;
+    opacity: .6;
+    margin-bottom: 4px;
+
+}
+
+#info-title {
+
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+
+}
+
+#info-description {
+
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+
+}
+
+/* ===========================
+   TYPE CURSOR
+=========================== */
+
+.cursor {
+
+    display: inline-block;
+
+    margin-left: 2px;
+
+    color: var(--color-system);
+
+    animation: blink .8s steps(1) infinite;
+
+}
+
+@keyframes blink {
+
+    50% {
+
+        opacity: 0;
+
+    }
+
+}
+
+/* ===========================
+   VIDEO MODAL
+=========================== */
+
+#video-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: rgba(0, 0, 0, .78);
+
+    backdrop-filter: blur(10px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity .35s ease,
+        visibility .35s ease;
+
+    z-index: 20000;
+
+}
+
+#video-modal.show {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+.modal-window {
+
+    display: flex;
+
+    flex-direction: column;
+
+    width: fit-content;
+
+    max-width: 60vw;
+
+    padding: 28px;
+
+}
+
+#modal-header {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+#modal-cam {
+
+    font-size: 16px;
+
+    color: var(--color-system);
+
+    margin-bottom: 4px;
+
+    animation: blink 1s steps(1) infinite;
+
+}
+
+#modal-title {
+
+    font-size: 20px;
+
+    color: var(--color-system);
+
+    font-weight: 600;
+
+    margin-bottom: 10px;
+
+}
+
+#modal-description {
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    color: var(--color-system);
+
+    margin-bottom: 12px;
+
+}
+
+#modal-footer {
+
+    font-size: 13px;
+
+    opacity: .7;
+
+    color: var(--color-system);
+
+    margin-top: 12px;
+
+}
+
+.modal-video-wrapper {
+
+    position: relative;
+
+    width: min(70vw, 1200px);
+
+    aspect-ratio: 16/9;
+
+    background: #000;
+
+    border: var(--border);
+
+    overflow: hidden;
+
+}
+
+#modal-video {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+
+}
+
+/*====================================
+CAM005
+====================================*/
+
+#cam005 {
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+#webcam {
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    transform: scaleX(-1);
+
+}
+
+#cam005-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+}
+
+#face-box {
+
+    position: absolute;
+
+    display: none;
+
+    border: 2px solid #8AFF8A;
+
+    box-sizing: border-box;
+
+}
+
+#cam005-status {
+
+    position: absolute;
+
+    left: 12px;
+    bottom: 12px;
+
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+
+    color: #8AFF8A;
+
+    font-family: var(--font-mono);
+
+    background: rgba(0, 0, 0, .45);
+
+    border: 1px solid rgba(138, 255, 138, .5);
+
+    padding: 10px 12px;
+
+    width: fit-content;
+
+    min-width: 0;
+
+    pointer-events: none;
+
+}
+
+.status-title {
+
+    font-size: 11px;
+
+    opacity: .7;
+
+    margin-bottom: 4px;
+
+}
+
+.status-value {
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+}
+
+#tracking-canvas {
+
+    position: absolute;
+
+    inset: 0;
+
+    transform: scaleX(-1);
+
+    width: 100%;
+
+    height: 100%;
+
+    pointer-events: none;
+
+}
+
+#modal-tracking-canvas {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    pointer-events: none;
+
+}
