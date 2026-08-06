@@ -19,6 +19,12 @@ const modalCtx =
 
 let faceLandmarker;
 
+const cam005Monitor =
+    document.getElementById("cam005");
+
+const videoModal =
+    document.getElementById("video-modal");
+
 const EYE_THRESHOLD = 0.014;
 const EYE_CLOSE_FRAMES = 20;
 
@@ -71,6 +77,11 @@ function setState(mode) {
 
     cam005State.mode = mode;
 
+    // 이전 상태 초기화
+    cam005Monitor.classList.remove("warning");
+    statusTitle.parentElement.classList.remove("warning");
+    videoModal.classList.remove("warning");
+
     switch (mode) {
 
         case "NO_SUBJECT":
@@ -111,13 +122,17 @@ function setState(mode) {
 
         case "WARNING":
 
-            statusTitle.textContent =
-                "WARNING";
+            statusTitle.textContent = "WARNING";
 
-            statusValue.textContent =
-                "EYES CLOSED";
+            statusValue.textContent = "EYES CLOSED";
 
             cam005State.boxColor = "#FF4A4A";
+
+            statusTitle.parentElement.classList.add("warning");
+
+            cam005Monitor.classList.add("warning");
+
+            videoModal.classList.add("warning");
 
             break;
 

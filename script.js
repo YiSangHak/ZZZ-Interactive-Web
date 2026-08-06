@@ -266,6 +266,8 @@ function closeModal() {
 
     modal.classList.remove("show");
 
+    modal.classList.remove("warning");
+
     modalVideo.classList.remove("mirror");
 
     modalVideo.pause();
@@ -317,7 +319,13 @@ async function startWebcam() {
             await navigator.mediaDevices.getUserMedia({
 
                 video: {
-                    facingMode: "user"
+                    facingMode: "user",
+
+                    width: { ideal: 1280 },
+
+                    height: { ideal: 720 },
+
+                    aspectRatio: 16 / 9
                 },
 
                 audio: false

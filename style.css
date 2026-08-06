@@ -136,6 +136,24 @@ body {
 
 }
 
+.monitor.warning {
+
+    border-color: #FF4A4A;
+
+    border-width: 2px;
+
+    z-index: 10;
+
+}
+
+.monitor.warning .label {
+
+    color: #FF4A4A;
+
+    border-color: #FF4A4A;
+
+}
+
 .monitor video {
 
     width: 100%;
@@ -449,6 +467,21 @@ body {
 
 }
 
+#video-modal.warning #modal-cam,
+#video-modal.warning #modal-title,
+#video-modal.warning #modal-description,
+#video-modal.warning #modal-footer {
+
+    color: #FF4A4A;
+
+}
+
+#video-modal.warning .modal-video-wrapper {
+
+    border-color: #FF4A4A;
+
+}
+
 .modal-window {
 
     display: flex;
@@ -531,7 +564,7 @@ body {
 
     background: #000;
 
-    border: var(--border);
+    border: 2px solid var(--color-system);
 
     overflow: hidden;
 
@@ -620,13 +653,25 @@ CAM005
 
 }
 
+#cam005-status.warning {
+
+    color: #FF4A4A;
+
+    border-color: #FF4A4A;
+
+}
+
 .status-title {
 
-    font-size: 11px;
+    font-size: 14px;
 
     opacity: .7;
 
-    margin-bottom: 4px;
+}
+
+#cam005-status.warning .status-title {
+
+    animation: blink .8s steps(1) infinite;
 
 }
 
