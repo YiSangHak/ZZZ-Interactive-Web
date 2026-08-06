@@ -229,15 +229,20 @@ function openModal(monitor) {
     const monitorVideo = monitor.querySelector("video");
     const sourceElement = monitor.querySelector("source");
 
+    // 일반 CAM
     if (sourceElement) {
 
-        // 일반 CAM
+        modalVideo.style.transform = "none";
+
         modalVideo.srcObject = null;
         modalVideo.src = sourceElement.src;
 
     } else {
 
         // CAM-005 (웹캠)
+
+        modalVideo.style.transform = "scaleX(-1)";
+
         modalVideo.removeAttribute("src");
         modalVideo.srcObject = monitorVideo.srcObject;
 
