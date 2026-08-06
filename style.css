@@ -430,6 +430,10 @@ body {
 
 }
 
+#modal-video.mirror {
+    transform: scaleX(-1);
+}
+
 #video-modal.show {
 
     opacity: 1;

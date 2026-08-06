@@ -232,7 +232,7 @@ function openModal(monitor) {
     // 일반 CAM
     if (sourceElement) {
 
-        modalVideo.style.transform = "none";
+        modalVideo.classList.remove("mirror");
 
         modalVideo.srcObject = null;
         modalVideo.src = sourceElement.src;
@@ -241,7 +241,7 @@ function openModal(monitor) {
 
         // CAM-005 (웹캠)
 
-        modalVideo.style.transform = "scaleX(-1)";
+        modalVideo.classList.add("mirror");
 
         modalVideo.removeAttribute("src");
         modalVideo.srcObject = monitorVideo.srcObject;
@@ -265,6 +265,8 @@ function openModal(monitor) {
 function closeModal() {
 
     modal.classList.remove("show");
+
+    modalVideo.classList.remove("mirror");
 
     modalVideo.pause();
 
