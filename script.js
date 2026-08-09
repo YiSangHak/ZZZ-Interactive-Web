@@ -226,6 +226,19 @@ function openModal(monitor) {
     window.isCam005ModalOpen =
         monitor.id === "cam005";
 
+    if (monitor.id === "cam005") {
+
+        modal.classList.toggle(
+            "warning",
+            document.getElementById("cam005-status").classList.contains("warning")
+        );
+
+    } else {
+
+        modal.classList.remove("warning");
+
+    }
+
     const monitorVideo = monitor.querySelector("video");
     const sourceElement = monitor.querySelector("source");
 
