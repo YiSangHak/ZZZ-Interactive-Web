@@ -2,63 +2,133 @@
 <html lang="ko">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>ZZZ</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
     <main class="monitor-wall">
 
-        <article class="monitor" data-id="CAM-001" data-title="EEG MONITOR" data-description="피감시자의 EEG 신호를 실시간으로 기록하는 생체 모니터링 채널이다.수집된 뇌파 데이터를 기반으로 수면 상태와 각성 패턴을 지속적으로 분석한다.">
-            <video autoplay muted loop playsinline>
-                <source src="assets/videos/cam001.mp4" type="video/mp4">
-            </video>
+
+        <!-- ===========================
+        CAM-001
+        =========================== -->
+
+        <article class="monitor" id="cam001" data-id="CAM-001" data-title="EEG MONITOR"
+            data-description="피감시자의 EEG 신호를 실시간으로 기록하는 생체 모니터링 채널이다. 수집된 뇌파 데이터를 기반으로 수면 상태와 각성 패턴을 지속적으로 분석한다.">
+
+            <canvas id="cam001-canvas"></canvas>
+
+
             <div class="label">
-                <span class="cam-id">CAM-001</span>
+
+                <span class="cam-id">
+                    CAM-001
+                </span>
+
             </div>
+
         </article>
 
-        <article class="monitor" data-id="CAM-002" data-title="SIGNAL STANDBY" data-description="ZZZ 수면감찰청 통합 감시 시스템의 대기 채널이다. 기관 식별 신호와 시스템 상태를 유지하며 감시 네트워크의 정상 동작을 확인한다.">
+
+        <!-- ===========================
+        CAM-002
+        =========================== -->
+
+        <article class="monitor" data-id="CAM-002" data-title="SIGNAL STANDBY"
+            data-description="ZZZ 수면감찰청 통합 감시 시스템의 대기 채널이다. 기관 식별 신호와 시스템 상태를 유지하며 감시 네트워크의 정상 동작을 확인한다.">
+
             <video autoplay muted loop playsinline>
+
                 <source src="assets/videos/cam002.mp4" type="video/mp4">
+
             </video>
+
+
             <div class="label">
-                <span class="cam-id">CAM-002</span>
+
+                <span class="cam-id">
+                    CAM-002
+                </span>
+
             </div>
+
         </article>
+
+
+        <!-- ===========================
+        CAM-003
+        =========================== -->
 
         <article class="monitor" data-id="CAM-003" data-title="SLEEPCAST"
             data-description="'GO TO SLEEP' 명령을 반복 송출하는 수면 유도 방송 채널이다. 모든 시민은 해당 신호를 통해 수면 행동을 학습하며 기관의 수면 프로토콜을 지속적으로 수신한다.">
+
             <video autoplay muted loop playsinline>
+
                 <source src="assets/videos/cam003.mp4" type="video/mp4">
+
             </video>
+
+
             <div class="label">
-                <span class="cam-id">CAM-003</span>
+
+                <span class="cam-id">
+                    CAM-003
+                </span>
+
             </div>
+
         </article>
 
-        <article class="monitor" data-id="CAM-004" data-title="SLEEP DEPTH ANALYSIS" data-description="수집된 생체 데이터를 기반으로 대상자의 수면 깊이를 분석하는 채널이다. 수면 단계의 변화와 안정성을 실시간으로 계산하여 기록 시스템에 반영한다.">
+
+        <!-- ===========================
+        CAM-004
+        =========================== -->
+
+        <article class="monitor" data-id="CAM-004" data-title="SLEEP DEPTH ANALYSIS"
+            data-description="수집된 생체 데이터를 기반으로 대상자의 수면 깊이를 분석하는 채널이다. 수면 단계의 변화와 안정성을 실시간으로 계산하여 기록 시스템에 반영한다.">
+
             <video autoplay muted loop playsinline>
+
                 <source src="assets/videos/cam004.mp4" type="video/mp4">
+
             </video>
+
+
             <div class="label">
-                <span class="cam-id">CAM-004</span>
+
+                <span class="cam-id">
+                    CAM-004
+                </span>
+
             </div>
+
         </article>
+
+
+        <!-- ===========================
+        CAM-005
+        =========================== -->
 
         <article class="monitor" id="cam005" data-id="CAM-005" data-title="LIVE ANALYSIS"
             data-description="대상자의 얼굴과 생체 움직임을 추적하는 실시간 감시 채널이다. 얼굴 및 수면과 직접 관련된 부위의 움직임을 분석하여 각성 상태와 수면 이탈 여부를 감지한다.">
 
-            <video id="webcam" autoplay muted playsinline>
-            </video>
+            <video id="webcam" autoplay muted playsinline></video>
+
 
             <div id="cam005-overlay">
 
                 <canvas id="tracking-canvas"></canvas>
+
 
                 <div id="cam005-status">
 
@@ -74,6 +144,7 @@
 
             </div>
 
+
             <div class="label">
 
                 <span class="cam-id">
@@ -84,47 +155,108 @@
 
         </article>
 
-        <article class="monitor" data-id="CAM-006" data-title="SLEEP SIGNAL" data-description="시각 자극을 통해 대상자의 집중을 유도하는 수면 신호 채널이다. 반복적인 패턴과 움직임을 송출하여 안정적인 수면 상태로의 진입을 보조한다.">
+
+        <!-- ===========================
+        CAM-006
+        =========================== -->
+
+        <article class="monitor" data-id="CAM-006" data-title="SLEEP SIGNAL"
+            data-description="시각 자극을 통해 대상자의 집중을 유도하는 수면 신호 채널이다. 반복적인 패턴과 움직임을 송출하여 안정적인 수면 상태로의 진입을 보조한다.">
+
             <video autoplay muted loop playsinline>
+
                 <source src="assets/videos/cam006.mp4" type="video/mp4">
+
             </video>
+
+
             <div class="label">
-                <span class="cam-id">CAM-006</span>
+
+                <span class="cam-id">
+                    CAM-006
+                </span>
+
             </div>
+
         </article>
 
-        <article class="monitor" data-id="CAM-007" data-title="NO SIGNAL" data-description="현재 감시 데이터를 수신하지 못한 비활성 채널이다. 시스템 복구 또는 신규 대상자 등록 시 자동으로 감시 네트워크에 재편입된다.">
+
+        <!-- ===========================
+        CAM-007
+        =========================== -->
+
+        <article class="monitor" data-id="CAM-007" data-title="NO SIGNAL"
+            data-description="현재 감시 데이터를 수신하지 못한 비활성 채널이다. 시스템 복구 또는 신규 대상자 등록 시 자동으로 감시 네트워크에 재편입된다.">
+
             <video autoplay muted loop playsinline>
+
                 <source src="assets/videos/cam007.mp4" type="video/mp4">
+
             </video>
+
+
             <div class="label">
-                <span class="cam-id">CAM-007</span>
+
+                <span class="cam-id">
+                    CAM-007
+                </span>
+
             </div>
+
         </article>
 
-        <article class="monitor" data-id="CAM-008" data-title="SHEEP COUNTING SIMULATION" data-description="양 세기 시뮬레이션을 기반으로 수면 유도를 수행하는 보조 채널이다. 반복되는 움직임을 통해 대상자의 집중을 안정시키고 자연스러운 졸음을 유도한다.">
-            <video autoplay muted loop playsinline>
-                <source src="assets/videos/cam008.mp4" type="video/mp4">
-            </video>
+
+        <!-- ===========================
+        CAM-008
+        =========================== -->
+
+        <article class="monitor" id="cam008" data-id="CAM-008" data-title="SHEEP COUNTING SIMULATION"
+            data-description="양 세기 시뮬레이션을 기반으로 수면 유도를 수행하는 보조 채널이다. 반복되는 움직임을 통해 대상자의 집중을 안정시키고 자연스러운 졸음을 유도한다.">
+
+            <canvas id="cam008-canvas"></canvas>
+
+
             <div class="label">
-                <span class="cam-id">CAM-008</span>
+
+                <span class="cam-id">
+                    CAM-008
+                </span>
+
             </div>
+
         </article>
 
-        <article class="monitor" data-id="CAM-009" data-title="SLEEP TERMINAL" data-description="수면감찰청 중앙 기록 시스템과 연결되는 기관 관리 단말이다. 감시 결과와 수면 기록을 저장하며 모든 데이터는 ZZZ 중앙 아카이브로 전송된다.">
+
+        <!-- ===========================
+        CAM-009
+        =========================== -->
+
+        <article class="monitor" data-id="CAM-009" data-title="SLEEP TERMINAL"
+            data-description="수면감찰청 중앙 기록 시스템과 연결되는 기관 관리 단말이다. 감시 결과와 수면 기록을 저장하며 모든 데이터는 ZZZ 중앙 아카이브로 전송된다.">
+
             <video autoplay muted loop playsinline>
+
                 <source src="assets/videos/cam009.mp4" type="video/mp4">
+
             </video>
+
+
             <div class="label">
-                <span class="cam-id">CAM-009</span>
+
+                <span class="cam-id">
+                    CAM-009
+                </span>
+
             </div>
+
         </article>
 
     </main>
 
+
     <!-- ===========================
-     CROSSHAIR
-=========================== -->
+    CROSSHAIR
+    =========================== -->
 
     <div id="crosshair">
 
@@ -134,9 +266,10 @@
 
     </div>
 
+
     <!-- ===========================
-     SCAN RING
-=========================== -->
+    SCAN RING
+    =========================== -->
 
     <div id="cursor-ui">
 
@@ -148,13 +281,17 @@
 
         </svg>
 
-        <span id="progress-text">0</span>
+
+        <span id="progress-text">
+            0
+        </span>
 
     </div>
 
+
     <!-- ===========================
-     INFO PANEL
-=========================== -->
+    INFO PANEL
+    =========================== -->
 
     <div id="info-panel">
 
@@ -168,8 +305,8 @@
 
 
     <!-- ===========================
-     VIDEO MODAL
-=========================== -->
+    VIDEO MODAL
+    =========================== -->
 
     <div id="video-modal">
 
@@ -185,14 +322,31 @@
 
             </div>
 
+
             <div class="modal-video-wrapper">
 
-                <video id="modal-video" autoplay muted loop playsinline>
-                </video>
+
+                <!-- NORMAL VIDEO / CAM005 -->
+
+                <video id="modal-video" autoplay muted loop playsinline></video>
+
+
+                <!-- CAM001 -->
+
+                <canvas id="modal-cam001-canvas"></canvas>
+
+
+                <!-- CAM008 -->
+
+                <canvas id="modal-cam008-canvas"></canvas>
+
+
+                <!-- CAM005 TRACKING -->
 
                 <canvas id="modal-tracking-canvas"></canvas>
 
             </div>
+
 
             <div id="modal-footer">
 
@@ -204,7 +358,17 @@
 
     </div>
 
+
+    <!-- ===========================
+    SCRIPTS
+    =========================== -->
+
+    <script src="cam001.js"></script>
+
+    <script src="cam008.js"></script>
+
     <script type="module" src="cam005.js"></script>
+
     <script src="script.js"></script>
 
 </body>

@@ -3,6 +3,11 @@ import {
     FaceLandmarker
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
+
+/*====================================
+DOM
+====================================*/
+
 const webcam =
     document.getElementById("webcam");
 
@@ -18,26 +23,89 @@ const modalCanvas =
 const modalCtx =
     modalCanvas.getContext("2d");
 
+const cam005Monitor =
+    document.getElementById("cam005");
+
+const cam005Label =
+    cam005Monitor.querySelector(".label");
+
+const statusPanel =
+    document.getElementById("cam005-status");
+
 const statusTitle =
-    document.querySelector("#cam005-status .status-title");
+    statusPanel.querySelector(".status-title");
 
 const statusValue =
-    document.querySelector("#cam005-status .status-value");
+    statusPanel.querySelector(".status-value");
+
+const modalCam =
+    document.getElementById("modal-cam");
+
+const modalTitle =
+    document.getElementById("modal-title");
+
+const modalDescription =
+    document.getElementById("modal-description");
+
+const modalFooter =
+    document.getElementById("modal-footer");
+
+const modalVideoWrapper =
+    document.querySelector(".modal-video-wrapper");
 
 
 /*====================================
-CAM005 CONFIG
+CONFIG
 ====================================*/
 
 const MAX_SUBJECTS = 3;
 
 const SUBJECT_MATCH_DISTANCE = 0.18;
 
+const SUBJECT_LOST_TIMEOUT = 1000;
+
 const FACE_BOX_PADDING = 10;
 
-const SYSTEM_COLOR = "#8AFF8A";
+const LANDMARK_POINT_RADIUS = 5;
 
-const LANDMARK_POINT_RADIUS = 4;
+
+/* Colors */
+
+const SYSTEM_COLOR =
+    "#8AFF8A";
+
+const WARNING_COLOR =
+    "#FF4A4A";
+
+
+/* Analysis */
+
+const ANALYSIS_DURATION =
+    3000;
+
+
+/* Score result blink */
+
+const SCORE_BLINK_COUNT =
+    5;
+
+const SCORE_BLINK_INTERVAL =
+    180;
+
+
+/* Warning blink */
+
+const WARNING_BLINK_INTERVAL =
+    250;
+
+
+/* Sleep Score */
+
+const WARNING_THRESHOLD =
+    60;
+
+const WARNING_PROBABILITY =
+    0.5;
 
 
 /*====================================
@@ -83,7 +151,9 @@ const cam005State = {
 
     mode: "NO_SUBJECT",
 
-    trackingStarted: false
+    trackingStarted: false,
+
+    warning: false
 
 };
 
@@ -94,25 +164,194 @@ SUBJECT STATE
 
 const subjects = [];
 
-let nextSubjectId = 1;
+
+/*====================================
+UTILITY
+====================================*/
+
+function randomInteger(
+    min,
+    max
+) {
+
+    return Math.floor(
+        Math.random() *
+        (max - min + 1)
+    ) + min;
+
+}
 
 
 /*====================================
-GENERAL STATE
+SLEEP SCORE
 ====================================*/
 
-let trackingTimeout = null;
+function generateSleepScore() {
+
+    /*
+    50% → WARNING
+    20 ~ 59
+
+    50% → NORMAL
+    60 ~ 95
+    */
+
+    const isWarning =
+        Math.random() <
+        WARNING_PROBABILITY;
+
+
+    if (isWarning) {
+
+        return randomInteger(
+            20,
+            59
+        );
+
+    }
+
+
+    return randomInteger(
+        60,
+        95
+    );
+
+}
+
+
+/*====================================
+GLOBAL WARNING UI
+====================================*/
+
+function applyGlobalWarning(
+    active
+) {
+
+    cam005State.warning =
+        active;
+
+
+    if (active) {
+
+        /* CAM005 */
+
+        cam005Monitor.style.borderColor =
+            WARNING_COLOR;
+
+        cam005Monitor.style.borderWidth =
+            "2px";
+
+
+        /* CAM005 LABEL */
+
+        cam005Label.style.color =
+            WARNING_COLOR;
+
+        cam005Label.style.borderColor =
+            WARNING_COLOR;
+
+
+        /* STATUS PANEL */
+
+        statusPanel.style.color =
+            WARNING_COLOR;
+
+        statusPanel.style.borderColor =
+            WARNING_COLOR;
+
+
+        /*
+        CAM005 modal only
+        */
+
+        if (
+            window.isCam005ModalOpen
+        ) {
+
+            modalCam.style.color =
+                WARNING_COLOR;
+
+            modalTitle.style.color =
+                WARNING_COLOR;
+
+            modalDescription.style.color =
+                WARNING_COLOR;
+
+            modalFooter.style.color =
+                WARNING_COLOR;
+
+            modalVideoWrapper.style.borderColor =
+                WARNING_COLOR;
+
+        }
+
+    } else {
+
+        cam005Monitor.style.borderColor =
+            "";
+
+        cam005Monitor.style.borderWidth =
+            "";
+
+        cam005Label.style.color =
+            "";
+
+        cam005Label.style.borderColor =
+            "";
+
+        statusPanel.style.color =
+            "";
+
+        statusPanel.style.borderColor =
+            "";
+
+
+        if (
+            window.isCam005ModalOpen
+        ) {
+
+            modalCam.style.color =
+                "";
+
+            modalTitle.style.color =
+                "";
+
+            modalDescription.style.color =
+                "";
+
+            modalFooter.style.color =
+                "";
+
+            modalVideoWrapper.style.borderColor =
+                "";
+
+        }
+
+    }
+
+}
 
 
 /*====================================
 CAM005 STATUS
 ====================================*/
 
-function setState(mode) {
+function setState(
+    mode
+) {
 
-    if (cam005State.mode === mode) return;
+    if (
+        cam005State.mode ===
+        mode
+    ) {
 
-    cam005State.mode = mode;
+        return;
+
+    }
+
+
+    cam005State.mode =
+        mode;
 
 
     switch (mode) {
@@ -139,6 +378,17 @@ function setState(mode) {
             break;
 
 
+        case "ANALYZING":
+
+            statusTitle.textContent =
+                "LIVE ANALYSIS";
+
+            statusValue.textContent =
+                "ANALYZING";
+
+            break;
+
+
         case "TRACKING":
 
             statusTitle.textContent =
@@ -149,7 +399,51 @@ function setState(mode) {
 
             break;
 
+
+        case "WARNING":
+
+            statusTitle.textContent =
+                "WARNING";
+
+            statusValue.textContent =
+                "LOW SLEEP SCORE";
+
+            break;
+
     }
+
+}
+
+
+/*====================================
+SUBJECT ID
+====================================*/
+
+function getAvailableSubjectId() {
+
+    for (
+        let id = 1;
+        id <= MAX_SUBJECTS;
+        id++
+    ) {
+
+        const alreadyUsed =
+            subjects.some(
+                subject =>
+                    subject.id === id
+            );
+
+
+        if (!alreadyUsed) {
+
+            return id;
+
+        }
+
+    }
+
+
+    return null;
 
 }
 
@@ -158,21 +452,57 @@ function setState(mode) {
 CREATE SUBJECT
 ====================================*/
 
-function createSubject(centerX, centerY) {
+function createSubject(
+    centerX,
+    centerY
+) {
+
+    const id =
+        getAvailableSubjectId();
+
+
+    if (
+        id === null
+    ) {
+
+        return null;
+
+    }
+
+
+    const now =
+        performance.now();
+
 
     const subject = {
 
-        id: nextSubjectId,
+        id,
 
-        centerX: centerX,
+        centerX,
+        centerY,
 
-        centerY: centerY
+        analysisStartedAt:
+            now,
+
+        sleepScore:
+            null,
+
+        analysisComplete:
+            false,
+
+        warning:
+            false,
+
+        lastSeenAt:
+            now
 
     };
 
-    nextSubjectId++;
 
-    subjects.push(subject);
+    subjects.push(
+        subject
+    );
+
 
     return subject;
 
@@ -180,23 +510,56 @@ function createSubject(centerX, centerY) {
 
 
 /*====================================
-RESET SUBJECTS
+REMOVE LOST SUBJECTS
 ====================================*/
 
-function resetSubjects() {
+function removeLostSubjects() {
 
-    subjects.length = 0;
+    const now =
+        performance.now();
 
-    nextSubjectId = 1;
+
+    for (
+        let i =
+            subjects.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        const subject =
+            subjects[i];
+
+
+        if (
+            now -
+            subject.lastSeenAt >
+            SUBJECT_LOST_TIMEOUT
+        ) {
+
+            subjects.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
 
 }
 
 
 /*====================================
-MATCH SUBJECT
+MATCH SUBJECTS
 ====================================*/
 
-function matchSubjects(faceData) {
+function matchSubjects(
+    faceData
+) {
+
+    removeLostSubjects();
+
 
     const matchedSubjects = [];
 
@@ -205,40 +568,54 @@ function matchSubjects(faceData) {
     ];
 
 
+    /*
+    기존 Subject와 현재 얼굴 매칭
+    */
+
     faceData.forEach(face => {
 
-        let closestSubject = null;
+        let closestSubject =
+            null;
 
         let closestDistance =
             SUBJECT_MATCH_DISTANCE;
 
 
-        availableSubjects.forEach(subject => {
+        availableSubjects.forEach(
+            subject => {
 
-            const distance =
-                Math.hypot(
+                const distance =
+                    Math.hypot(
 
-                    face.centerX -
-                    subject.centerX,
+                        face.centerX -
+                        subject.centerX,
 
-                    face.centerY -
-                    subject.centerY
+                        face.centerY -
+                        subject.centerY
 
-                );
+                    );
 
 
-            if (distance < closestDistance) {
+                if (
+                    distance <
+                    closestDistance
+                ) {
 
-                closestDistance = distance;
+                    closestDistance =
+                        distance;
 
-                closestSubject = subject;
+                    closestSubject =
+                        subject;
+
+                }
 
             }
+        );
 
-        });
 
-
-        if (closestSubject) {
+        if (
+            closestSubject
+        ) {
 
             closestSubject.centerX =
                 face.centerX;
@@ -246,12 +623,16 @@ function matchSubjects(faceData) {
             closestSubject.centerY =
                 face.centerY;
 
+            closestSubject.lastSeenAt =
+                performance.now();
+
 
             matchedSubjects.push({
 
                 face,
 
-                subject: closestSubject
+                subject:
+                    closestSubject
 
             });
 
@@ -272,15 +653,27 @@ function matchSubjects(faceData) {
     });
 
 
+    /*
+    새로운 얼굴에 Subject ID 생성
+    */
+
     faceData.forEach(face => {
 
         const alreadyMatched =
             matchedSubjects.some(
-                item => item.face === face
+                item =>
+                    item.face === face
             );
 
 
-        if (alreadyMatched) return;
+        if (
+            alreadyMatched
+        ) {
+
+            return;
+
+        }
+
 
         if (
             subjects.length >=
@@ -294,9 +687,21 @@ function matchSubjects(faceData) {
 
         const subject =
             createSubject(
+
                 face.centerX,
+
                 face.centerY
+
             );
+
+
+        if (
+            !subject
+        ) {
+
+            return;
+
+        }
 
 
         matchedSubjects.push({
@@ -316,36 +721,62 @@ function matchSubjects(faceData) {
 
 
 /*====================================
-CREATE FACE DATA
+FACE DATA
 ====================================*/
 
-function getFaceData(landmarks) {
+function getFaceData(
+    landmarks
+) {
 
     let minX = 1;
-
     let minY = 1;
 
     let maxX = 0;
-
     let maxY = 0;
 
 
-    for (const point of landmarks) {
+    for (
+        const point
+        of landmarks
+    ) {
 
-        if (point.x < minX) {
-            minX = point.x;
+        if (
+            point.x < minX
+        ) {
+
+            minX =
+                point.x;
+
         }
 
-        if (point.y < minY) {
-            minY = point.y;
+
+        if (
+            point.y < minY
+        ) {
+
+            minY =
+                point.y;
+
         }
 
-        if (point.x > maxX) {
-            maxX = point.x;
+
+        if (
+            point.x > maxX
+        ) {
+
+            maxX =
+                point.x;
+
         }
 
-        if (point.y > maxY) {
-            maxY = point.y;
+
+        if (
+            point.y > maxY
+        ) {
+
+            maxY =
+                point.y;
+
         }
 
     }
@@ -356,20 +787,83 @@ function getFaceData(landmarks) {
         landmarks,
 
         centerX:
-            (minX + maxX) / 2,
+            (
+                minX +
+                maxX
+            ) / 2,
 
         centerY:
-            (minY + maxY) / 2,
+            (
+                minY +
+                maxY
+            ) / 2,
 
         minX,
-
         minY,
-
         maxX,
-
         maxY
 
     };
+
+}
+
+
+/*====================================
+UPDATE SUBJECT ANALYSIS
+====================================*/
+
+function updateSubjectAnalysis(
+    subject
+) {
+
+    /*
+    분석 완료 후에는
+    점수를 다시 계산하지 않는다.
+    */
+
+    if (
+        subject.analysisComplete
+    ) {
+
+        return;
+
+    }
+
+
+    const elapsed =
+        performance.now() -
+        subject.analysisStartedAt;
+
+
+    /*
+    3초 분석
+    */
+
+    if (
+        elapsed <
+        ANALYSIS_DURATION
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+    결과를 한 번만 생성
+    */
+
+    subject.sleepScore =
+        generateSleepScore();
+
+
+    subject.analysisComplete =
+        true;
+
+
+    subject.warning =
+        subject.sleepScore <
+        WARNING_THRESHOLD;
 
 }
 
@@ -400,12 +894,18 @@ function getFaceBox(
             padding,
 
         w:
-            (face.maxX - face.minX) *
+            (
+                face.maxX -
+                face.minX
+            ) *
             canvas.width +
             padding * 2,
 
         h:
-            (face.maxY - face.minY) *
+            (
+                face.maxY -
+                face.minY
+            ) *
             canvas.height +
             padding * 2
 
@@ -421,11 +921,12 @@ DRAW LANDMARK POINTS
 function drawLandmarkPoints(
     context,
     canvas,
-    landmarks
+    landmarks,
+    color
 ) {
 
     context.fillStyle =
-        SYSTEM_COLOR;
+        color;
 
 
     for (
@@ -437,18 +938,24 @@ function drawLandmarkPoints(
             landmarks[index];
 
 
-        if (!point) continue;
+        if (
+            !point
+        ) {
+
+            continue;
+
+        }
 
 
         /*
-        웹캠 영상이 mirror 상태이므로
-        X 좌표만 반전
+        Webcam mirror correction
         */
 
         const x =
             canvas.width -
             point.x *
             canvas.width;
+
 
         const y =
             point.y *
@@ -491,12 +998,6 @@ function drawSubject(
     subject
 ) {
 
-    /*
-    ================================
-    FACE BOUNDING BOX
-    ================================
-    */
-
     const faceBox =
         getFaceBox(
             face,
@@ -505,8 +1006,7 @@ function drawSubject(
 
 
     /*
-    웹캠 영상이 mirror 상태이므로
-    Bounding Box의 X 좌표만 반전
+    Webcam mirror correction
     */
 
     faceBox.x =
@@ -515,39 +1015,93 @@ function drawSubject(
         faceBox.w;
 
 
+    /*
+    Normal / Warning Color
+    */
+
+    const color =
+        subject.warning
+            ? WARNING_COLOR
+            : SYSTEM_COLOR;
+
+
+    /*
+    ====================================
+    WARNING BLINK
+    ====================================
+
+    WARNING 상태에서는
+    Bounding Box + Header + Text만 점멸.
+
+    얼굴 Landmark Points는
+    계속 표시한다.
+    */
+
+    let showWarningUI =
+        true;
+
+
+    if (
+        subject.warning &&
+        subject.analysisComplete
+    ) {
+
+        const blinkPhase =
+            Math.floor(
+
+                performance.now() /
+                WARNING_BLINK_INTERVAL
+
+            );
+
+
+        showWarningUI =
+            blinkPhase % 2 === 0;
+
+    }
+
+
     context.save();
 
 
-    /*
+    /*================================
+    UI CONFIG
+    ================================*/
+
+    const headerHeight =
+        68;
+
+    const headerPaddingX =
+        10;
+
+    const subjectFontSize =
+        24;
+
+    const scoreFontSize =
+        24;
+
+    const boxLineWidth =
+        5;
+
+
+    const headerX =
+        faceBox.x;
+
+    const headerY =
+        faceBox.y -
+        headerHeight;
+
+    const headerWidth =
+        faceBox.w;
+
+
+    /*================================
+    LANDMARK POINTS
     ================================
-    BOUNDING BOX
-    ================================
-    */
 
-    context.strokeStyle =
-        SYSTEM_COLOR;
-
-    context.lineWidth = 2;
-
-
-    context.strokeRect(
-
-        faceBox.x,
-
-        faceBox.y,
-
-        faceBox.w,
-
-        faceBox.h
-
-    );
-
-
-    /*
-    ================================
-    FACIAL LANDMARK POINTS
-    ================================
-    */
+    얼굴 점은 WARNING 점멸과 관계없이
+    항상 표시한다.
+    ================================*/
 
     drawLandmarkPoints(
 
@@ -555,44 +1109,224 @@ function drawSubject(
 
         canvas,
 
-        face.landmarks
+        face.landmarks,
+
+        color
 
     );
 
 
-    /*
-    ================================
-    SUBJECT LABEL
-    ================================
-    */
+    /*================================
+    BLINKING WARNING UI
+    ================================*/
 
-    const label =
-        `SUBJECT-${String(
-            subject.id
-        ).padStart(2, "0")}`;
+    if (
+        showWarningUI
+    ) {
 
 
-    context.fillStyle =
-        SYSTEM_COLOR;
+        /*================================
+        BOUNDING BOX
+        ================================*/
+
+        context.strokeStyle =
+            color;
+
+        context.lineWidth =
+            boxLineWidth;
 
 
-    context.font =
-        "13px 'JetBrains Mono', monospace";
+        context.strokeRect(
+
+            faceBox.x,
+
+            faceBox.y,
+
+            faceBox.w,
+
+            faceBox.h
+
+        );
 
 
-    context.textBaseline =
-        "bottom";
+        /*================================
+        HEADER BACKGROUND
+        ================================*/
+
+        context.fillStyle =
+            color;
 
 
-    context.fillText(
+        context.fillRect(
 
-        label,
+            headerX,
 
-        faceBox.x,
+            headerY,
 
-        faceBox.y - 8
+            headerWidth,
 
-    );
+            headerHeight
+
+        );
+
+
+        /*================================
+        SUBJECT ID
+        ================================*/
+
+        const subjectLabel =
+            `SUBJECT-${String(
+                subject.id
+            ).padStart(
+                2,
+                "0"
+            )}`;
+
+
+        context.fillStyle =
+            "#000000";
+
+
+        context.font =
+            `${subjectFontSize}px 'JetBrains Mono', monospace`;
+
+
+        context.textBaseline =
+            "top";
+
+
+        context.fillText(
+
+            subjectLabel,
+
+            headerX +
+            headerPaddingX,
+
+            headerY +
+            6
+
+        );
+
+
+        /*================================
+        ANALYSIS / SCORE
+        ================================*/
+
+        let scoreLabel;
+
+        let showScore =
+            true;
+
+
+        if (
+            !subject.analysisComplete
+        ) {
+
+            const elapsed =
+                performance.now() -
+                subject.analysisStartedAt;
+
+
+            const progress =
+                Math.min(
+
+                    elapsed /
+                    ANALYSIS_DURATION,
+
+                    1
+
+                );
+
+
+            const percent =
+                Math.floor(
+                    progress *
+                    100
+                );
+
+
+            scoreLabel =
+                `ANALYZING ${percent}%`;
+
+        } else {
+
+            scoreLabel =
+                `SLEEP SCORE: ${subject.sleepScore}`;
+
+
+            /*
+            NORMAL 상태일 때만
+            결과 텍스트 5회 점멸.
+
+            WARNING 상태에서는
+            Header 전체 점멸을 사용한다.
+            */
+
+            if (
+                !subject.warning
+            ) {
+
+                const timeSinceResult =
+                    performance.now() -
+                    (
+                        subject.analysisStartedAt +
+                        ANALYSIS_DURATION
+                    );
+
+
+                const blinkDuration =
+                    SCORE_BLINK_COUNT *
+                    SCORE_BLINK_INTERVAL *
+                    2;
+
+
+                if (
+                    timeSinceResult <
+                    blinkDuration
+                ) {
+
+                    const blinkPhase =
+                        Math.floor(
+
+                            timeSinceResult /
+                            SCORE_BLINK_INTERVAL
+
+                        );
+
+
+                    showScore =
+                        blinkPhase % 2 === 0;
+
+                }
+
+            }
+
+        }
+
+
+        context.font =
+            `${scoreFontSize}px 'JetBrains Mono', monospace`;
+
+
+        if (
+            showScore
+        ) {
+
+            context.fillText(
+
+                scoreLabel,
+
+                headerX +
+                headerPaddingX,
+
+                headerY +
+                36
+
+            );
+
+        }
+
+    }
 
 
     context.restore();
@@ -632,40 +1366,122 @@ function drawSubjects(
 
 
 /*====================================
+GLOBAL STATUS
+====================================*/
+
+function updateGlobalStatus(
+    matchedSubjects
+) {
+
+    /*
+    한 명이라도 WARNING이면
+    CAM005 전체 WARNING
+    */
+
+    const hasWarning =
+        matchedSubjects.some(
+            item =>
+                item.subject
+                    .analysisComplete &&
+                item.subject
+                    .warning
+        );
+
+
+    if (
+        hasWarning
+    ) {
+
+        setState(
+            "WARNING"
+        );
+
+
+        applyGlobalWarning(
+            true
+        );
+
+
+        return;
+
+    }
+
+
+    applyGlobalWarning(
+        false
+    );
+
+
+    /*
+    아직 분석 중인 Subject 확인
+    */
+
+    const isAnalyzing =
+        matchedSubjects.some(
+            item =>
+                !item.subject
+                    .analysisComplete
+        );
+
+
+    if (
+        isAnalyzing
+    ) {
+
+        setState(
+            "ANALYZING"
+        );
+
+    } else {
+
+        setState(
+            "TRACKING"
+        );
+
+    }
+
+}
+
+
+/*====================================
 CREATE FACE LANDMARKER
 ====================================*/
 
 async function createFaceLandmarker() {
 
     const vision =
-        await FilesetResolver.forVisionTasks(
+        await FilesetResolver
+            .forVisionTasks(
 
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
 
-        );
+            );
 
 
     faceLandmarker =
-        await FaceLandmarker.createFromOptions(
+        await FaceLandmarker
+            .createFromOptions(
 
-            vision,
+                vision,
 
-            {
+                {
 
-                baseOptions: {
+                    baseOptions: {
 
-                    modelAssetPath:
-                        "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
+                        modelAssetPath:
+                            "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
 
-                },
+                    },
 
-                runningMode: "VIDEO",
+                    runningMode:
+                        "VIDEO",
 
-                numFaces: MAX_SUBJECTS
+                    numFaces:
+                        MAX_SUBJECTS
 
-            }
+                }
 
-        );
+            );
 
 
     console.log(
@@ -686,7 +1502,9 @@ DETECT FACE
 
 async function detectFace() {
 
-    if (!webcam.videoWidth) {
+    if (
+        !webcam.videoWidth
+    ) {
 
         requestAnimationFrame(
             detectFace
@@ -697,11 +1515,9 @@ async function detectFace() {
     }
 
 
-    /*
-    ================================
+    /*================================
     CANVAS SIZE
-    ================================
-    */
+    ================================*/
 
     if (
         canvas.width !==
@@ -737,11 +1553,9 @@ async function detectFace() {
     }
 
 
-    /*
-    ================================
+    /*================================
     CLEAR
-    ================================
-    */
+    ================================*/
 
     ctx.clearRect(
 
@@ -769,20 +1583,19 @@ async function detectFace() {
     );
 
 
-    /*
-    ================================
-    DETECT
-    ================================
-    */
+    /*================================
+    FACE DETECTION
+    ================================*/
 
     const result =
-        faceLandmarker.detectForVideo(
+        faceLandmarker
+            .detectForVideo(
 
-            webcam,
+                webcam,
 
-            performance.now()
+                performance.now()
 
-        );
+            );
 
 
     const detectedFaces =
@@ -796,26 +1609,25 @@ async function detectFace() {
             );
 
 
-    /*
-    ================================
+    /*================================
     NO SUBJECT
-    ================================
-    */
+    ================================*/
 
     if (
-        detectedFaces.length === 0
+        detectedFaces.length ===
+        0
     ) {
-
-        clearTimeout(
-            trackingTimeout
-        );
-
 
         cam005State.trackingStarted =
             false;
 
 
-        resetSubjects();
+        removeLostSubjects();
+
+
+        applyGlobalWarning(
+            false
+        );
 
 
         setState(
@@ -833,17 +1645,17 @@ async function detectFace() {
     }
 
 
-    /*
-    ================================
-    SUBJECT DETECTED
-    ================================
-    */
+    /*================================
+    FIRST DETECTION
+    ================================*/
 
     if (
-        !cam005State.trackingStarted
+        !cam005State
+            .trackingStarted
     ) {
 
-        cam005State.trackingStarted =
+        cam005State
+            .trackingStarted =
             true;
 
 
@@ -851,35 +1663,12 @@ async function detectFace() {
             "SUBJECT_DETECTED"
         );
 
-
-        clearTimeout(
-            trackingTimeout
-        );
-
-
-        trackingTimeout =
-            setTimeout(
-
-                () => {
-
-                    setState(
-                        "TRACKING"
-                    );
-
-                },
-
-                800
-
-            );
-
     }
 
 
-    /*
-    ================================
+    /*================================
     MATCH SUBJECTS
-    ================================
-    */
+    ================================*/
 
     const matchedSubjects =
         matchSubjects(
@@ -887,11 +1676,33 @@ async function detectFace() {
         );
 
 
-    /*
-    ================================
+    /*================================
+    ANALYZE
+    ================================*/
+
+    matchedSubjects.forEach(
+        item => {
+
+            updateSubjectAnalysis(
+                item.subject
+            );
+
+        }
+    );
+
+
+    /*================================
+    GLOBAL STATUS
+    ================================*/
+
+    updateGlobalStatus(
+        matchedSubjects
+    );
+
+
+    /*================================
     DRAW GRID
-    ================================
-    */
+    ================================*/
 
     drawSubjects(
 
@@ -904,11 +1715,9 @@ async function detectFace() {
     );
 
 
-    /*
-    ================================
+    /*================================
     DRAW MODAL
-    ================================
-    */
+    ================================*/
 
     if (
         window.isCam005ModalOpen

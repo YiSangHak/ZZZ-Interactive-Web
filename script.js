@@ -21,11 +21,27 @@ const infoDescription =
 
 let typingTimeout;
 
+
 const modal =
     document.getElementById("video-modal");
 
 const modalVideo =
     document.getElementById("modal-video");
+
+const modalCam001Canvas =
+    document.getElementById(
+        "modal-cam001-canvas"
+    );
+
+const modalCam008Canvas =
+    document.getElementById(
+        "modal-cam008-canvas"
+    );
+
+const modalTrackingCanvas =
+    document.getElementById(
+        "modal-tracking-canvas"
+    );
 
 const modalCam =
     document.getElementById("modal-cam");
@@ -34,13 +50,32 @@ const modalTitle =
     document.getElementById("modal-title");
 
 const modalDescription =
-    document.getElementById("modal-description");
+    document.getElementById(
+        "modal-description"
+    );
 
 
-let isModalOpen = false;
+let isModalOpen =
+    false;
 
-window.isCam005ModalOpen = false;
 
+/*====================================
+CAM MODAL STATE
+====================================*/
+
+window.isCam001ModalOpen =
+    false;
+
+window.isCam005ModalOpen =
+    false;
+
+window.isCam008ModalOpen =
+    false;
+
+
+/*====================================
+CURSOR CONFIG
+====================================*/
 
 const circumference =
     parseFloat(
@@ -67,100 +102,143 @@ const cursorOffset =
     );
 
 
-let progress = 0;
+let progress =
+    0;
 
 let animation;
 
-let scanStartTime = 0;
+let scanStartTime =
+    0;
 
-const scanDuration = 1000;
+const scanDuration =
+    1000;
 
 
 /*====================================
 MONITOR EVENTS
 ====================================*/
 
-monitors.forEach(monitor => {
+monitors.forEach(
+    monitor => {
 
-    monitor.addEventListener(
-        "mouseenter",
-        () => {
+        monitor.addEventListener(
+            "mouseenter",
+            () => {
 
-            if (isModalOpen) return;
+                if (
+                    isModalOpen
+                ) {
 
-            progress = 0;
+                    return;
 
-            progressText.textContent = 0;
-
-            scanStartTime =
-                performance.now();
-
-            ring.style.strokeDashoffset =
-                circumference;
-
-            cursorUI.style.display =
-                "block";
-
-            cancelAnimationFrame(
-                animation
-            );
-
-            animate(
-                monitor
-            );
-
-        }
-    );
+                }
 
 
-    monitor.addEventListener(
-        "mouseleave",
-        () => {
-
-            if (isModalOpen) return;
-
-            cursorUI.style.display =
-                "none";
-
-            progress = 0;
-
-            progressText.textContent = 0;
-
-            infoPanel.classList.remove(
-                "show"
-            );
-
-            clearTimeout(
-                typingTimeout
-            );
-
-            infoDescription.innerHTML =
-                "";
-
-            cancelAnimationFrame(
-                animation
-            );
-
-        }
-    );
+                progress =
+                    0;
 
 
-    monitor.addEventListener(
-        "click",
-        e => {
+                progressText.textContent =
+                    0;
 
-            e.stopPropagation();
 
-            if (isModalOpen) return;
+                scanStartTime =
+                    performance.now();
 
-            openModal(
-                monitor
-            );
 
-        }
-    );
+                ring.style.strokeDashoffset =
+                    circumference;
 
-});
+
+                cursorUI.style.display =
+                    "block";
+
+
+                cancelAnimationFrame(
+                    animation
+                );
+
+
+                animate(
+                    monitor
+                );
+
+            }
+        );
+
+
+        monitor.addEventListener(
+            "mouseleave",
+            () => {
+
+                if (
+                    isModalOpen
+                ) {
+
+                    return;
+
+                }
+
+
+                cursorUI.style.display =
+                    "none";
+
+
+                progress =
+                    0;
+
+
+                progressText.textContent =
+                    0;
+
+
+                infoPanel.classList.remove(
+                    "show"
+                );
+
+
+                clearTimeout(
+                    typingTimeout
+                );
+
+
+                infoDescription.innerHTML =
+                    "";
+
+
+                cancelAnimationFrame(
+                    animation
+                );
+
+            }
+        );
+
+
+        monitor.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+
+                if (
+                    isModalOpen
+                ) {
+
+                    return;
+
+                }
+
+
+                openModal(
+                    monitor
+                );
+
+            }
+        );
+
+    }
+);
 
 
 /*====================================
@@ -169,44 +247,56 @@ MOUSE
 
 document.addEventListener(
     "mousemove",
-    e => {
+    event => {
 
         crosshair.style.left =
-            e.clientX + "px";
+            event.clientX +
+            "px";
 
         crosshair.style.top =
-            e.clientY + "px";
+            event.clientY +
+            "px";
 
 
-        if (isModalOpen) return;
+        if (
+            isModalOpen
+        ) {
+
+            return;
+
+        }
 
 
         cursorUI.style.left =
             (
-                e.clientX +
+                event.clientX +
                 cursorOffset
-            ) + "px";
+            ) +
+            "px";
 
 
         cursorUI.style.top =
             (
-                e.clientY +
+                event.clientY +
                 cursorOffset
-            ) + "px";
+            ) +
+            "px";
 
 
         infoPanel.style.left =
             (
-                e.clientX +
+                event.clientX +
                 cursorOffset
-            ) + "px";
+            ) +
+            "px";
 
 
         infoPanel.style.top =
             (
-                e.clientY +
+                event.clientY +
                 cursorOffset
-            ) + "px";
+            ) +
+            "px";
 
     }
 );
@@ -216,7 +306,9 @@ document.addEventListener(
 SCAN
 ====================================*/
 
-function animate(monitor) {
+function animate(
+    monitor
+) {
 
     const elapsed =
         performance.now() -
@@ -227,16 +319,25 @@ function animate(monitor) {
         (
             elapsed /
             scanDuration
-        ) * 100;
+        ) *
+        100;
 
 
-    if (progress > 100) {
-        progress = 100;
+    if (
+        progress >
+        100
+    ) {
+
+        progress =
+            100;
+
     }
 
 
     progressText.textContent =
-        `${Math.floor(progress)}%`;
+        `${Math.floor(
+            progress
+        )}%`;
 
 
     const offset =
@@ -252,7 +353,10 @@ function animate(monitor) {
         offset;
 
 
-    if (progress < 100) {
+    if (
+        progress <
+        100
+    ) {
 
         animation =
             requestAnimationFrame(
@@ -267,6 +371,7 @@ function animate(monitor) {
         progressText.textContent =
             "100%";
 
+
         showInfoPanel(
             monitor
         );
@@ -280,7 +385,9 @@ function animate(monitor) {
 INFO PANEL
 ====================================*/
 
-function showInfoPanel(monitor) {
+function showInfoPanel(
+    monitor
+) {
 
     cursorUI.style.display =
         "none";
@@ -297,13 +404,17 @@ function showInfoPanel(monitor) {
 
 
     document
-        .getElementById("info-cam")
+        .getElementById(
+            "info-cam"
+        )
         .textContent =
         id;
 
 
     document
-        .getElementById("info-title")
+        .getElementById(
+            "info-title"
+        )
         .textContent =
         title;
 
@@ -324,14 +435,17 @@ function showInfoPanel(monitor) {
 TYPE DESCRIPTION
 ====================================*/
 
-function typeDescription(text) {
+function typeDescription(
+    text
+) {
 
     clearTimeout(
         typingTimeout
     );
 
 
-    let index = 0;
+    let index =
+        0;
 
 
     infoDescription.innerHTML =
@@ -373,12 +487,78 @@ function typeDescription(text) {
 
 
 /*====================================
+RESET MODAL MEDIA
+====================================*/
+
+function resetModalMedia() {
+
+    /* CAM STATE */
+
+    window.isCam001ModalOpen =
+        false;
+
+    window.isCam005ModalOpen =
+        false;
+
+    window.isCam008ModalOpen =
+        false;
+
+
+    /* VIDEO */
+
+    modalVideo.pause();
+
+    modalVideo.srcObject =
+        null;
+
+    modalVideo.removeAttribute(
+        "src"
+    );
+
+    modalVideo.load();
+
+    modalVideo.classList.remove(
+        "mirror"
+    );
+
+    modalVideo.classList.remove(
+        "cam005-feed"
+    );
+
+    modalVideo.style.display =
+        "none";
+
+
+    /* CAM001 */
+
+    modalCam001Canvas.style.display =
+        "none";
+
+
+    /* CAM008 */
+
+    modalCam008Canvas.style.display =
+        "none";
+
+
+    /* CAM005 */
+
+    modalTrackingCanvas.style.display =
+        "none";
+
+}
+
+
+/*====================================
 OPEN MODAL
 ====================================*/
 
-function openModal(monitor) {
+function openModal(
+    monitor
+) {
 
-    isModalOpen = true;
+    isModalOpen =
+        true;
 
 
     cancelAnimationFrame(
@@ -400,76 +580,133 @@ function openModal(monitor) {
     );
 
 
-    window.isCam005ModalOpen =
-        monitor.id === "cam005";
+    resetModalMedia();
 
 
-    const monitorVideo =
-        monitor.querySelector(
-            "video"
-        );
+    /*================================
+    CAM001
+    ================================*/
+
+    if (
+        monitor.id ===
+        "cam001"
+    ) {
+
+        window.isCam001ModalOpen =
+            true;
 
 
-    const sourceElement =
-        monitor.querySelector(
-            "source"
-        );
-
-
-    /*
-    ================================
-    NORMAL CAM
-    ================================
-    */
-
-    if (sourceElement) {
-
-        modalVideo.classList.remove(
-            "mirror"
-        );
-
-        modalVideo.classList.remove(
-            "cam005-feed"
-        );
-
-
-        modalVideo.srcObject =
-            null;
-
-
-        modalVideo.src =
-            sourceElement.src;
+        modalCam001Canvas.style.display =
+            "block";
 
     }
 
 
-    /*
-    ================================
-    CAM005
-    ================================
-    */
+    /*================================
+    CAM008
+    ================================*/
 
-    else {
+    else if (
+        monitor.id ===
+        "cam008"
+    ) {
+
+        window.isCam008ModalOpen =
+            true;
+
+
+        modalCam008Canvas.style.display =
+            "block";
+
+    }
+
+
+    /*================================
+    CAM005
+    ================================*/
+
+    else if (
+        monitor.id ===
+        "cam005"
+    ) {
+
+        window.isCam005ModalOpen =
+            true;
+
+
+        const monitorVideo =
+            monitor.querySelector(
+                "video"
+            );
+
+
+        modalVideo.style.display =
+            "block";
+
+
+        modalTrackingCanvas.style.display =
+            "block";
+
 
         modalVideo.classList.add(
             "mirror"
         );
 
+
         modalVideo.classList.add(
             "cam005-feed"
-        );
-
-
-        modalVideo.removeAttribute(
-            "src"
         );
 
 
         modalVideo.srcObject =
             monitorVideo.srcObject;
 
+
+        modalVideo.play()
+            .catch(
+                () => { }
+            );
+
     }
 
+
+    /*================================
+    NORMAL VIDEO CAM
+    ================================*/
+
+    else {
+
+        const sourceElement =
+            monitor.querySelector(
+                "source"
+            );
+
+
+        if (
+            sourceElement
+        ) {
+
+            modalVideo.style.display =
+                "block";
+
+
+            modalVideo.src =
+                sourceElement.src;
+
+
+            modalVideo.play()
+                .catch(
+                    () => { }
+                );
+
+        }
+
+    }
+
+
+    /*================================
+    MODAL TEXT
+    ================================*/
 
     modalCam.textContent =
         monitor.dataset.id;
@@ -506,35 +743,15 @@ function closeModal() {
     );
 
 
-    modalVideo.classList.remove(
-        "mirror"
+    document.body.classList.remove(
+        "modal-open"
     );
 
 
-    modalVideo.classList.remove(
-        "cam005-feed"
-    );
+    resetModalMedia();
 
 
-    modalVideo.pause();
-
-
-    modalVideo.srcObject =
-        null;
-
-
-    modalVideo.removeAttribute(
-        "src"
-    );
-
-
-    modalVideo.load();
-
-
-    isModalOpen = false;
-
-
-    window.isCam005ModalOpen =
+    isModalOpen =
         false;
 
 }
@@ -546,10 +763,11 @@ MODAL EVENTS
 
 document.addEventListener(
     "keydown",
-    e => {
+    event => {
 
         if (
-            e.key === "Escape"
+            event.key ===
+            "Escape"
         ) {
 
             closeModal();
@@ -562,10 +780,11 @@ document.addEventListener(
 
 modal.addEventListener(
     "click",
-    e => {
+    event => {
 
         if (
-            e.target === modal
+            event.target ===
+            modal
         ) {
 
             closeModal();
@@ -601,11 +820,13 @@ async function startWebcam() {
                             "user",
 
                         width: {
-                            ideal: 1280
+                            ideal:
+                                1280
                         },
 
                         height: {
-                            ideal: 720
+                            ideal:
+                                720
                         },
 
                         aspectRatio:
@@ -613,7 +834,8 @@ async function startWebcam() {
 
                     },
 
-                    audio: false
+                    audio:
+                        false
 
                 });
 
@@ -624,10 +846,12 @@ async function startWebcam() {
     }
 
 
-    catch (err) {
+    catch (
+    error
+    ) {
 
         console.error(
-            err
+            error
         );
 
     }

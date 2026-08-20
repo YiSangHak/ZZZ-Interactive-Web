@@ -224,6 +224,8 @@ MONITOR WALL
     padding:
         6px 10px;
 
+    z-index: 10;
+
 }
 
 
@@ -234,6 +236,36 @@ MONITOR WALL
 
     font-family:
         var(--font-mono);
+
+}
+
+
+/*====================================
+CAM001
+====================================*/
+
+#cam001 {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        #111111;
+
+}
+
+
+#cam001-canvas {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    background:
+        #111111;
 
 }
 
@@ -688,11 +720,33 @@ VIDEO MODAL
 
 #modal-video {
 
+    display: none;
+
     width: 100%;
 
     height: 100%;
 
     object-fit: contain;
+
+}
+
+
+/* CAM001 MODAL */
+
+#modal-cam001-canvas {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: none;
+
+    width: 100%;
+
+    height: 100%;
+
+    background:
+        #111111;
 
 }
 
@@ -843,10 +897,61 @@ CAM005
 
     inset: 0;
 
+    display: none;
+
     width: 100%;
 
     height: 100%;
 
     pointer-events: none;
+
+}
+
+/*====================================
+CAM008
+====================================*/
+
+#cam008 {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        #111111;
+
+}
+
+
+#cam008-canvas {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    background:
+        #111111;
+
+}
+
+
+/* CAM008 MODAL */
+
+#modal-cam008-canvas {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: none;
+
+    width: 100%;
+
+    height: 100%;
+
+    background:
+        #111111;
 
 }
