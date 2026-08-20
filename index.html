@@ -185,14 +185,10 @@
         CAM-007
         =========================== -->
 
-        <article class="monitor" data-id="CAM-007" data-title="NO SIGNAL"
-            data-description="현재 감시 데이터를 수신하지 못한 비활성 채널이다. 시스템 복구 또는 신규 대상자 등록 시 자동으로 감시 네트워크에 재편입된다.">
+        <article class="monitor" id="cam007" data-id="CAM-007" data-title="NO SIGNAL"
+            data-description="현재 감시 데이터를 수신하지 못한 비활성 채널이다. 시스템은 연결되지 않은 감시 신호를 지속적으로 탐색하며 복구를 시도한다.">
 
-            <video autoplay muted loop playsinline>
-
-                <source src="assets/videos/cam007.mp4" type="video/mp4">
-
-            </video>
+            <div id="cam007-screen" class="cam007-screen"></div>
 
 
             <div class="label">
@@ -249,6 +245,7 @@
 
     </main>
 
+
     <!-- ===========================
     CROSSHAIR
     =========================== -->
@@ -300,7 +297,7 @@
 
 
     <!-- ===========================
-    VIDEO MODAL
+    MODAL
     =========================== -->
 
     <div id="video-modal">
@@ -331,18 +328,24 @@
                 <canvas id="modal-cam001-canvas"></canvas>
 
 
+                <!-- CAM007 -->
+
+                <div id="modal-cam007-screen" class="cam007-screen cam007-modal-screen"></div>
+
+
                 <!-- CAM008 -->
 
                 <canvas id="modal-cam008-canvas"></canvas>
 
 
-                <!-- CAM005 TRACKING -->
-
-                <canvas id="modal-tracking-canvas"></canvas>
-
                 <!-- CAM009 -->
 
                 <div id="modal-cam009-terminal" class="cam009-terminal modal-cam009-terminal"></div>
+
+
+                <!-- CAM005 TRACKING -->
+
+                <canvas id="modal-tracking-canvas"></canvas>
 
             </div>
 
@@ -363,6 +366,8 @@
     =========================== -->
 
     <script src="cam001.js"></script>
+
+    <script src="cam007.js"></script>
 
     <script src="cam008.js"></script>
 

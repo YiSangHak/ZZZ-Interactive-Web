@@ -461,10 +461,7 @@ INFO PANEL
     padding: 18px;
 
     background:
-        rgba(0,
-            0,
-            0,
-            .82);
+        rgba(0, 0, 0, .82);
 
     border:
         1px solid var(--color-system);
@@ -525,11 +522,14 @@ INFO PANEL
 
     line-height: 1.5;
 
-    white-space: pre-wrap;
+    white-space:
+        pre-wrap;
 
-    word-break: keep-all;
+    word-break:
+        keep-all;
 
-    overflow-wrap: anywhere;
+    overflow-wrap:
+        anywhere;
 
 }
 
@@ -540,9 +540,11 @@ TYPE CURSOR
 
 .cursor {
 
-    display: inline-block;
+    display:
+        inline-block;
 
-    margin-left: 2px;
+    margin-left:
+        2px;
 
     color:
         var(--color-system);
@@ -576,22 +578,22 @@ VIDEO MODAL
 
     display: flex;
 
-    justify-content: center;
+    justify-content:
+        center;
 
-    align-items: center;
+    align-items:
+        center;
 
     background:
-        rgba(0,
-            0,
-            0,
-            .78);
+        rgba(0, 0, 0, .78);
 
     backdrop-filter:
         blur(10px);
 
     opacity: 0;
 
-    visibility: hidden;
+    visibility:
+        hidden;
 
     transition:
         opacity .35s ease,
@@ -606,7 +608,8 @@ VIDEO MODAL
 
     opacity: 1;
 
-    visibility: visible;
+    visibility:
+        visible;
 
 }
 
@@ -615,7 +618,8 @@ VIDEO MODAL
 
     display: flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
     width:
         min(60vw,
@@ -630,7 +634,8 @@ VIDEO MODAL
 
     display: flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
 }
 
@@ -675,11 +680,14 @@ VIDEO MODAL
 
     margin-bottom: 12px;
 
-    white-space: pre-wrap;
+    white-space:
+        pre-wrap;
 
-    overflow-wrap: break-word;
+    overflow-wrap:
+        break-word;
 
-    word-break: keep-all;
+    word-break:
+        keep-all;
 
     max-width: 100ch;
 
@@ -706,7 +714,8 @@ VIDEO MODAL
 
     width: 100%;
 
-    aspect-ratio: 16 / 9;
+    aspect-ratio:
+        16 / 9;
 
     background: #000;
 
@@ -726,7 +735,8 @@ VIDEO MODAL
 
     height: 100%;
 
-    object-fit: contain;
+    object-fit:
+        contain;
 
 }
 
@@ -784,8 +794,6 @@ CAM005
 }
 
 
-/* CAM005 webcam */
-
 #webcam {
 
     width: 100%;
@@ -822,9 +830,11 @@ CAM005
 
     bottom: 12px;
 
-    display: inline-flex;
+    display:
+        inline-flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
     gap: 4px;
 
@@ -835,21 +845,16 @@ CAM005
         var(--font-mono);
 
     background:
-        rgba(0,
-            0,
-            0,
-            .45);
+        rgba(0, 0, 0, .45);
 
     border:
-        1px solid rgba(138,
-            255,
-            138,
-            .5);
+        1px solid rgba(138, 255, 138, .5);
 
     padding:
         10px 12px;
 
-    width: fit-content;
+    width:
+        fit-content;
 
     min-width: 0;
 
@@ -907,6 +912,7 @@ CAM005
 
 }
 
+
 /*====================================
 CAM008
 ====================================*/
@@ -937,8 +943,6 @@ CAM008
 }
 
 
-/* CAM008 MODAL */
-
 #modal-cam008-canvas {
 
     position: absolute;
@@ -956,6 +960,7 @@ CAM008
 
 }
 
+
 /*====================================
 CAM009 TERMINAL
 ====================================*/
@@ -971,10 +976,6 @@ CAM009 TERMINAL
 
 }
 
-
-/*====================================
-TERMINAL BASE
-====================================*/
 
 .cam009-terminal {
 
@@ -996,11 +997,9 @@ TERMINAL BASE
     font-family:
         var(--font-mono);
 
-    font-size:
-        11px;
+    font-size: 11px;
 
-    line-height:
-        1.55;
+    line-height: 1.55;
 
     white-space:
         pre-wrap;
@@ -1008,15 +1007,10 @@ TERMINAL BASE
     word-break:
         break-word;
 
-    user-select:
-        none;
+    user-select: none;
 
 }
 
-
-/*====================================
-TERMINAL LINES
-====================================*/
 
 .terminal-line {
 
@@ -1026,20 +1020,15 @@ TERMINAL LINES
 }
 
 
-/* SYSTEM */
-
 .terminal-line.system {
 
     color:
         var(--color-system);
 
-    font-weight:
-        700;
+    font-weight: 700;
 
 }
 
-
-/* COMMAND */
 
 .terminal-line.command {
 
@@ -1049,33 +1038,21 @@ TERMINAL LINES
 }
 
 
-/* RESPONSE */
-
 .terminal-line.response {
 
     color:
-        rgba(138,
-            255,
-            138,
-            .72);
+        rgba(138, 255, 138, .72);
 
 }
 
-
-/* MUTED */
 
 .terminal-line.muted {
 
     color:
-        rgba(138,
-            255,
-            138,
-            .42);
+        rgba(138, 255, 138, .42);
 
 }
 
-
-/* SUCCESS */
 
 .terminal-line.success {
 
@@ -1085,8 +1062,6 @@ TERMINAL LINES
 }
 
 
-/* WARNING */
-
 .terminal-line.warning {
 
     color:
@@ -1095,17 +1070,12 @@ TERMINAL LINES
 }
 
 
-/*====================================
-TERMINAL CURSOR
-====================================*/
-
 .terminal-cursor {
 
     display:
         inline-block;
 
-    margin-left:
-        2px;
+    margin-left: 2px;
 
     color:
         var(--color-system);
@@ -1120,106 +1090,23 @@ TERMINAL CURSOR
 
     50% {
 
-        opacity:
-            0;
+        opacity: 0;
 
     }
 
 }
 
 
-/*====================================
-CAM009 GRID SCANLINE
-====================================*/
-
 #cam009::after {
 
-    content:
-        "";
+    content: "";
 
     position:
         absolute;
 
-    inset:
-        0;
+    inset: 0;
 
-    pointer-events:
-        none;
-
-    background:
-        repeating-linear-gradient(to bottom,
-
-            rgba(255,
-                255,
-                255,
-                0) 0px,
-
-            rgba(255,
-                255,
-                255,
-                0) 3px,
-
-            rgba(138,
-                255,
-                138,
-                .035) 4px);
-
-    z-index:
-        5;
-
-}
-
-
-/*====================================
-CAM009 MODAL
-====================================*/
-
-#modal-cam009-terminal {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    display:
-        none;
-
-    overflow-y:
-        hidden;
-
-    padding:
-        28px;
-
-    background:
-        #111111;
-
-    font-size:
-        15px;
-
-    line-height:
-        1.6;
-
-}
-
-
-/*====================================
-CAM009 MODAL SCANLINE
-====================================*/
-
-#modal-cam009-terminal::after {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    pointer-events:
-        none;
+    pointer-events: none;
 
     background:
         repeating-linear-gradient(to bottom,
@@ -1231,6 +1118,488 @@ CAM009 MODAL SCANLINE
             rgba(138,
                 255,
                 138,
-                .025) 4px);
+                .035) 4px);
+
+    z-index: 5;
+
+}
+
+
+#modal-cam009-terminal {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: none;
+
+    overflow-y:
+        hidden;
+
+    padding: 28px;
+
+    background:
+        #111111;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+}
+
+
+/*====================================
+CAM007 SIGNAL SYSTEM
+====================================*/
+
+#cam007 {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        #111111;
+
+}
+
+
+.cam007-screen {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    overflow: hidden;
+
+    background:
+        #111111;
+
+    color:
+        var(--color-system);
+
+    font-family:
+        var(--font-mono);
+
+}
+
+
+.cam007-content {
+
+    position: relative;
+
+    width:
+        min(72%,
+            340px);
+
+    display: flex;
+
+    flex-direction:
+        column;
+
+    gap: 10px;
+
+    color:
+        rgba(138,
+            255,
+            138,
+            .72);
+
+}
+
+
+.cam007-state {
+
+    color:
+        rgba(138,
+            255,
+            138,
+            .48);
+
+    font-size: 11px;
+
+    letter-spacing:
+        .08em;
+
+}
+
+
+.cam007-state.detected {
+
+    color:
+        var(--color-system);
+
+}
+
+
+.cam007-state.warning {
+
+    color:
+        #FF4A4A;
+
+}
+
+
+.cam007-main {
+
+    color:
+        var(--color-system);
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    letter-spacing:
+        .04em;
+
+}
+
+
+.cam007-status-row {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap: 12px;
+
+    font-size: 10px;
+
+    color:
+        rgba(138,
+            255,
+            138,
+            .58);
+
+}
+
+
+/*====================================
+CAM007 PROGRESS
+====================================*/
+
+.cam007-progress-track {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 6px;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(138,
+            255,
+            138,
+            .38);
+
+}
+
+
+.cam007-progress-bar {
+
+    width: 0;
+
+    height: 100%;
+
+    background:
+        var(--color-system);
+
+    transition:
+        width .08s linear;
+
+}
+
+
+/*====================================
+CAM007 META
+====================================*/
+
+.cam007-meta {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,
+            minmax(0,
+                1fr));
+
+    gap:
+        5px 16px;
+
+    color:
+        rgba(138,
+            255,
+            138,
+            .44);
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+}
+
+
+/*====================================
+CAM007 MESSAGE
+====================================*/
+
+.cam007-small {
+
+    color:
+        rgba(138,
+            255,
+            138,
+            .36);
+
+    font-size: 9px;
+
+    letter-spacing:
+        .03em;
+
+}
+
+
+/*====================================
+CAM007 SVG LOGO
+====================================*/
+
+.cam007-logo {
+
+    display: none;
+
+    width: 100%;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    padding:
+        6px 0;
+
+}
+
+
+.cam007-logo img {
+
+    display: block;
+
+    width: 155px;
+
+    max-width: 70%;
+
+    height: auto;
+
+    opacity: .86;
+
+}
+
+
+.cam007-logo img.signal-lock {
+
+    animation:
+        cam007SignalLock 2.0s ease-out both;
+
+}
+
+
+/*
+신호가 순간적으로 잡히는 느낌만 표현.
+좌우 글리치/노이즈 없음.
+*/
+
+@keyframes cam007SignalLock {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            scale(.985);
+
+    }
+
+
+    15% {
+
+        opacity: .35;
+
+    }
+
+
+    30% {
+
+        opacity: .75;
+
+        transform:
+            scale(1.004);
+
+    }
+
+
+    45% {
+
+        opacity: .92;
+
+    }
+
+
+    70% {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+
+
+    100% {
+
+        opacity: .88;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+/*====================================
+CAM007 DETECTED
+====================================*/
+
+.cam007-content.signal-detected {
+
+    text-shadow:
+        0 0 6px rgba(138,
+            255,
+            138,
+            .10);
+
+}
+
+
+/*====================================
+CAM007 VERY SUBTLE SCANLINE
+====================================*/
+
+#cam007::after {
+
+    content: "";
+
+    position:
+        absolute;
+
+    inset: 0;
+
+    pointer-events:
+        none;
+
+    background:
+        repeating-linear-gradient(to bottom,
+
+            transparent 0px,
+
+            transparent 5px,
+
+            rgba(138,
+                255,
+                138,
+                .012) 6px);
+
+    z-index: 5;
+
+}
+
+
+/*====================================
+CAM007 MODAL
+====================================*/
+
+#modal-cam007-screen {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: none;
+
+    background:
+        #111111;
+
+}
+
+
+.cam007-content-modal {
+
+    width:
+        min(68%,
+            620px);
+
+    gap: 18px;
+
+}
+
+
+.cam007-main-modal {
+
+    font-size: 36px;
+
+}
+
+
+.cam007-status-row-modal {
+
+    font-size: 14px;
+
+}
+
+
+.cam007-progress-track-modal {
+
+    height: 8px;
+
+}
+
+
+.cam007-logo-modal img {
+
+    width: 290px;
+
+    max-width: 58%;
+
+}
+
+
+.cam007-content-modal .cam007-meta {
+
+    gap:
+        8px 28px;
+
+    font-size: 13px;
+
+}
+
+
+.cam007-content-modal .cam007-small {
+
+    font-size: 12px;
 
 }

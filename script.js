@@ -32,31 +32,48 @@ const modal =
 const modalVideo =
     document.getElementById("modal-video");
 
+
 const modalCam001Canvas =
     document.getElementById(
         "modal-cam001-canvas"
     );
+
+
+const modalCam007Screen =
+    document.getElementById(
+        "modal-cam007-screen"
+    );
+
 
 const modalCam008Canvas =
     document.getElementById(
         "modal-cam008-canvas"
     );
 
+
 const modalCam009Terminal =
     document.getElementById(
         "modal-cam009-terminal"
     );
+
 
 const modalTrackingCanvas =
     document.getElementById(
         "modal-tracking-canvas"
     );
 
+
 const modalCam =
-    document.getElementById("modal-cam");
+    document.getElementById(
+        "modal-cam"
+    );
+
 
 const modalTitle =
-    document.getElementById("modal-title");
+    document.getElementById(
+        "modal-title"
+    );
+
 
 const modalDescription =
     document.getElementById(
@@ -76,6 +93,9 @@ window.isCam001ModalOpen =
     false;
 
 window.isCam005ModalOpen =
+    false;
+
+window.isCam007ModalOpen =
     false;
 
 window.isCam008ModalOpen =
@@ -265,6 +285,7 @@ document.addEventListener(
             event.clientX +
             "px";
 
+
         crosshair.style.top =
             event.clientY +
             "px";
@@ -408,8 +429,10 @@ function showInfoPanel(
     const id =
         monitor.dataset.id;
 
+
     const title =
         monitor.dataset.title;
+
 
     const description =
         monitor.dataset.description;
@@ -504,14 +527,15 @@ RESET MODAL MEDIA
 
 function resetModalMedia() {
 
-    /*================================
-    CAM STATE
-    ================================*/
+    /* CAM STATE */
 
     window.isCam001ModalOpen =
         false;
 
     window.isCam005ModalOpen =
+        false;
+
+    window.isCam007ModalOpen =
         false;
 
     window.isCam008ModalOpen =
@@ -521,9 +545,7 @@ function resetModalMedia() {
         false;
 
 
-    /*================================
-    VIDEO
-    ================================*/
+    /* VIDEO */
 
     modalVideo.pause();
 
@@ -554,33 +576,31 @@ function resetModalMedia() {
         "none";
 
 
-    /*================================
-    CAM001
-    ================================*/
+    /* CAM001 */
 
     modalCam001Canvas.style.display =
         "none";
 
 
-    /*================================
-    CAM008
-    ================================*/
+    /* CAM007 */
+
+    modalCam007Screen.style.display =
+        "none";
+
+
+    /* CAM008 */
 
     modalCam008Canvas.style.display =
         "none";
 
 
-    /*================================
-    CAM009
-    ================================*/
+    /* CAM009 */
 
     modalCam009Terminal.style.display =
         "none";
 
 
-    /*================================
-    CAM005 TRACKING
-    ================================*/
+    /* CAM005 */
 
     modalTrackingCanvas.style.display =
         "none";
@@ -619,16 +639,11 @@ function openModal(
     );
 
 
-    /*
-    이전 CAM 상태 초기화
-    */
-
     resetModalMedia();
 
 
     /*================================
     CAM001
-    EEG
     ================================*/
 
     if (
@@ -647,8 +662,26 @@ function openModal(
 
 
     /*================================
+    CAM007
+    ================================*/
+
+    else if (
+        monitor.id ===
+        "cam007"
+    ) {
+
+        window.isCam007ModalOpen =
+            true;
+
+
+        modalCam007Screen.style.display =
+            "flex";
+
+    }
+
+
+    /*================================
     CAM008
-    SHEEP GAME
     ================================*/
 
     else if (
@@ -668,7 +701,6 @@ function openModal(
 
     /*================================
     CAM009
-    TERMINAL
     ================================*/
 
     else if (
@@ -684,12 +716,6 @@ function openModal(
             "block";
 
 
-        /*
-        cam009.js가 동일 터미널 세션을
-        Grid / Modal 양쪽에 계속 렌더링하므로
-        여기서는 표시만 활성화한다.
-        */
-
         modalCam009Terminal.scrollTop =
             modalCam009Terminal.scrollHeight;
 
@@ -698,7 +724,6 @@ function openModal(
 
     /*================================
     CAM005
-    WEBCAM
     ================================*/
 
     else if (
@@ -747,7 +772,7 @@ function openModal(
 
 
     /*================================
-    NORMAL VIDEO CAM
+    NORMAL VIDEO
     ================================*/
 
     else {
