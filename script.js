@@ -22,6 +22,10 @@ const infoDescription =
 let typingTimeout;
 
 
+/*====================================
+MODAL DOM
+====================================*/
+
 const modal =
     document.getElementById("video-modal");
 
@@ -36,6 +40,11 @@ const modalCam001Canvas =
 const modalCam008Canvas =
     document.getElementById(
         "modal-cam008-canvas"
+    );
+
+const modalCam009Terminal =
+    document.getElementById(
+        "modal-cam009-terminal"
     );
 
 const modalTrackingCanvas =
@@ -70,6 +79,9 @@ window.isCam005ModalOpen =
     false;
 
 window.isCam008ModalOpen =
+    false;
+
+window.isCam009ModalOpen =
     false;
 
 
@@ -492,7 +504,9 @@ RESET MODAL MEDIA
 
 function resetModalMedia() {
 
-    /* CAM STATE */
+    /*================================
+    CAM STATE
+    ================================*/
 
     window.isCam001ModalOpen =
         false;
@@ -503,45 +517,70 @@ function resetModalMedia() {
     window.isCam008ModalOpen =
         false;
 
+    window.isCam009ModalOpen =
+        false;
 
-    /* VIDEO */
+
+    /*================================
+    VIDEO
+    ================================*/
 
     modalVideo.pause();
 
+
     modalVideo.srcObject =
         null;
+
 
     modalVideo.removeAttribute(
         "src"
     );
 
+
     modalVideo.load();
+
 
     modalVideo.classList.remove(
         "mirror"
     );
 
+
     modalVideo.classList.remove(
         "cam005-feed"
     );
+
 
     modalVideo.style.display =
         "none";
 
 
-    /* CAM001 */
+    /*================================
+    CAM001
+    ================================*/
 
     modalCam001Canvas.style.display =
         "none";
 
 
-    /* CAM008 */
+    /*================================
+    CAM008
+    ================================*/
 
     modalCam008Canvas.style.display =
         "none";
 
 
-    /* CAM005 */
+    /*================================
+    CAM009
+    ================================*/
+
+    modalCam009Terminal.style.display =
+        "none";
+
+
+    /*================================
+    CAM005 TRACKING
+    ================================*/
 
     modalTrackingCanvas.style.display =
         "none";
@@ -580,11 +619,16 @@ function openModal(
     );
 
 
+    /*
+    이전 CAM 상태 초기화
+    */
+
     resetModalMedia();
 
 
     /*================================
     CAM001
+    EEG
     ================================*/
 
     if (
@@ -604,6 +648,7 @@ function openModal(
 
     /*================================
     CAM008
+    SHEEP GAME
     ================================*/
 
     else if (
@@ -622,7 +667,38 @@ function openModal(
 
 
     /*================================
+    CAM009
+    TERMINAL
+    ================================*/
+
+    else if (
+        monitor.id ===
+        "cam009"
+    ) {
+
+        window.isCam009ModalOpen =
+            true;
+
+
+        modalCam009Terminal.style.display =
+            "block";
+
+
+        /*
+        cam009.js가 동일 터미널 세션을
+        Grid / Modal 양쪽에 계속 렌더링하므로
+        여기서는 표시만 활성화한다.
+        */
+
+        modalCam009Terminal.scrollTop =
+            modalCam009Terminal.scrollHeight;
+
+    }
+
+
+    /*================================
     CAM005
+    WEBCAM
     ================================*/
 
     else if (

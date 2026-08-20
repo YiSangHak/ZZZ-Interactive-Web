@@ -231,14 +231,10 @@
         CAM-009
         =========================== -->
 
-        <article class="monitor" data-id="CAM-009" data-title="SLEEP TERMINAL"
+        <article class="monitor" id="cam009" data-id="CAM-009" data-title="SLEEP TERMINAL"
             data-description="수면감찰청 중앙 기록 시스템과 연결되는 기관 관리 단말이다. 감시 결과와 수면 기록을 저장하며 모든 데이터는 ZZZ 중앙 아카이브로 전송된다.">
 
-            <video autoplay muted loop playsinline>
-
-                <source src="assets/videos/cam009.mp4" type="video/mp4">
-
-            </video>
+            <div id="cam009-terminal" class="cam009-terminal"></div>
 
 
             <div class="label">
@@ -252,7 +248,6 @@
         </article>
 
     </main>
-
 
     <!-- ===========================
     CROSSHAIR
@@ -345,6 +340,10 @@
 
                 <canvas id="modal-tracking-canvas"></canvas>
 
+                <!-- CAM009 -->
+
+                <div id="modal-cam009-terminal" class="cam009-terminal modal-cam009-terminal"></div>
+
             </div>
 
 
@@ -366,6 +365,8 @@
     <script src="cam001.js"></script>
 
     <script src="cam008.js"></script>
+
+    <script src="cam009.js"></script>
 
     <script type="module" src="cam005.js"></script>
 

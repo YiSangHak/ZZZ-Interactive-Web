@@ -955,3 +955,282 @@ CAM008
         #111111;
 
 }
+
+/*====================================
+CAM009 TERMINAL
+====================================*/
+
+#cam009 {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        #111111;
+
+}
+
+
+/*====================================
+TERMINAL BASE
+====================================*/
+
+.cam009-terminal {
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden;
+
+    padding:
+        44px 18px 18px 18px;
+
+    background:
+        #111111;
+
+    color:
+        var(--color-system);
+
+    font-family:
+        var(--font-mono);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.55;
+
+    white-space:
+        pre-wrap;
+
+    word-break:
+        break-word;
+
+    user-select:
+        none;
+
+}
+
+
+/*====================================
+TERMINAL LINES
+====================================*/
+
+.terminal-line {
+
+    min-height:
+        1.55em;
+
+}
+
+
+/* SYSTEM */
+
+.terminal-line.system {
+
+    color:
+        var(--color-system);
+
+    font-weight:
+        700;
+
+}
+
+
+/* COMMAND */
+
+.terminal-line.command {
+
+    color:
+        var(--color-system);
+
+}
+
+
+/* RESPONSE */
+
+.terminal-line.response {
+
+    color:
+        rgba(138,
+            255,
+            138,
+            .72);
+
+}
+
+
+/* MUTED */
+
+.terminal-line.muted {
+
+    color:
+        rgba(138,
+            255,
+            138,
+            .42);
+
+}
+
+
+/* SUCCESS */
+
+.terminal-line.success {
+
+    color:
+        var(--color-system);
+
+}
+
+
+/* WARNING */
+
+.terminal-line.warning {
+
+    color:
+        #FF4A4A;
+
+}
+
+
+/*====================================
+TERMINAL CURSOR
+====================================*/
+
+.terminal-cursor {
+
+    display:
+        inline-block;
+
+    margin-left:
+        2px;
+
+    color:
+        var(--color-system);
+
+    animation:
+        terminalCursorBlink .65s steps(1) infinite;
+
+}
+
+
+@keyframes terminalCursorBlink {
+
+    50% {
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+/*====================================
+CAM009 GRID SCANLINE
+====================================*/
+
+#cam009::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    background:
+        repeating-linear-gradient(to bottom,
+
+            rgba(255,
+                255,
+                255,
+                0) 0px,
+
+            rgba(255,
+                255,
+                255,
+                0) 3px,
+
+            rgba(138,
+                255,
+                138,
+                .035) 4px);
+
+    z-index:
+        5;
+
+}
+
+
+/*====================================
+CAM009 MODAL
+====================================*/
+
+#modal-cam009-terminal {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    display:
+        none;
+
+    overflow-y:
+        hidden;
+
+    padding:
+        28px;
+
+    background:
+        #111111;
+
+    font-size:
+        15px;
+
+    line-height:
+        1.6;
+
+}
+
+
+/*====================================
+CAM009 MODAL SCANLINE
+====================================*/
+
+#modal-cam009-terminal::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    background:
+        repeating-linear-gradient(to bottom,
+
+            transparent 0px,
+
+            transparent 3px,
+
+            rgba(138,
+                255,
+                138,
+                .025) 4px);
+
+}
