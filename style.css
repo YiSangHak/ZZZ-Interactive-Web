@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
+
 html,
 body,
 * {
     cursor: none !important;
 }
+
 
 img,
 video {
@@ -14,6 +16,7 @@ video {
     -webkit-user-drag: none;
 
 }
+
 
 :root {
 
@@ -33,11 +36,18 @@ video {
 
     --color-monitor: #111111;
 
+
     /* Font */
 
-    --font-main: "JetBrains Mono", "Pretendard", sans-serif;
+    --font-main:
+        "JetBrains Mono",
+        "Pretendard",
+        sans-serif;
 
-    --font-mono: "JetBrains Mono", monospace;
+    --font-mono:
+        "JetBrains Mono",
+        monospace;
+
 
     /* Font Size */
 
@@ -47,9 +57,12 @@ video {
 
     --font-progress: 12px;
 
+
     /* Border */
 
-    --border: 0.5px solid var(--color-border);
+    --border:
+        0.5px solid var(--color-border);
+
 
     /* Cursor */
 
@@ -65,44 +78,71 @@ video {
 
     --info-panel-offset: 8px;
 
+
+    /* CAM005 Camera */
+
+    --cam005-camera-filter:
+        brightness(1.04) contrast(.97) saturate(.98) blur(.25px);
+
 }
 
+
 * {
+
     margin: 0;
+
     padding: 0;
+
     box-sizing: border-box;
+
 }
+
 
 body {
 
-    background: var(--color-bg);
+    background:
+        var(--color-bg);
 
     height: 100vh;
 
     overflow: hidden;
 
-    font-family: var(--font-main);
+    font-family:
+        var(--font-main);
 
     cursor: none;
 
     user-select: none;
+
     -webkit-user-select: none;
 
 }
 
+
+/*====================================
+MONITOR WALL
+====================================*/
+
 .monitor-wall {
 
     width: 100vw;
+
     height: 100vh;
 
     display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    grid-template-rows:
+        repeat(3, 1fr);
 
     gap: 0;
+
     padding: 0;
+
 }
+
 
 .monitor {
 
@@ -112,152 +152,176 @@ body {
 
     cursor: none;
 
-    background: var(--color-monitor);
+    background:
+        var(--color-monitor);
 
-    border: var(--border);
+    border:
+        var(--border);
 
     transition: .3s;
+
 }
+
 
 .monitor:hover {
 
-    border-color: var(--color-system);
+    border-color:
+        var(--color-system);
 
     border-width: 2px;
 
     z-index: 10;
+
 }
+
 
 .monitor:hover .label {
 
-    border-color: var(--color-system);
+    border-color:
+        var(--color-system);
 
-    color: var(--color-system);
-
-}
-
-.monitor.warning {
-
-    border-color: #FF4A4A;
-
-    border-width: 2px;
-
-    z-index: 10;
+    color:
+        var(--color-system);
 
 }
 
-.monitor.warning .label {
-
-    color: #FF4A4A;
-
-    border-color: #FF4A4A;
-
-}
 
 .monitor video {
 
     width: 100%;
+
     height: 100%;
 
     object-fit: cover;
 
     user-select: none;
+
     -webkit-user-drag: none;
 
 }
+
 
 .label {
 
     position: absolute;
 
     top: 8px;
+
     left: 8px;
 
-    color: var(--color-white);
+    color:
+        var(--color-white);
 
-    font-size: var(--font-sm);
+    font-size:
+        var(--font-sm);
 
-    background: var(--color-overlay);
+    background:
+        var(--color-overlay);
 
-    border: var(--border);
+    border:
+        var(--border);
 
-    padding: 6px 10px;
+    padding:
+        6px 10px;
 
 }
+
 
 .cam-id {
 
-    font-size: var(--font-sm);
+    font-size:
+        var(--font-sm);
 
-    font-family: var(--font-mono);
+    font-family:
+        var(--font-mono);
 
 }
 
-/* ===========================
-   CROSSHAIR
-=========================== */
+
+/*====================================
+CROSSHAIR
+====================================*/
 
 #crosshair {
 
     position: fixed;
 
     width: 20px;
+
     height: 20px;
 
     pointer-events: none;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%,
+            -50%);
 
     z-index: 30000;
 
 }
 
+
 #crosshair .line {
 
     position: absolute;
 
-    background: var(--color-system);
+    background:
+        var(--color-system);
 
 }
+
 
 #crosshair .horizontal {
 
     top: 50%;
+
     left: 0;
 
     width: 20px;
+
     height: 1px;
 
-    transform: translateY(-50%);
+    transform:
+        translateY(-50%);
 
 }
+
 
 #crosshair .vertical {
 
     top: 0;
+
     left: 50%;
 
     width: 1px;
+
     height: 20px;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
 }
 
-/* ===========================
-   CURSOR UI
-=========================== */
+
+/*====================================
+CURSOR UI
+====================================*/
 
 #cursor-ui {
 
     position: fixed;
 
-    width: var(--cursor-size);
-    height: var(--cursor-size);
+    width:
+        var(--cursor-size);
+
+    height:
+        var(--cursor-size);
 
     pointer-events: none;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%,
+            -50%);
 
     display: none;
 
@@ -265,75 +329,96 @@ body {
 
 }
 
+
 .progress-ring {
 
     width: 100%;
+
     height: 100%;
 
-    transform: rotate(-90deg);
+    transform:
+        rotate(-90deg);
 
-    transition: opacity .2s ease;
+    transition:
+        opacity .2s ease;
 
 }
+
 
 .ring-bg {
 
     fill: none;
 
-    stroke: var(--color-ring-bg);
+    stroke:
+        var(--color-ring-bg);
 
     stroke-width: 2;
 
 }
+
 
 .ring {
 
     fill: none;
 
-    stroke: var(--color-system);
+    stroke:
+        var(--color-system);
 
     stroke-width: 2;
 
-    stroke-linecap: round;
+    stroke-linecap:
+        round;
 
-    stroke-dasharray: var(--ring-length);
+    stroke-dasharray:
+        var(--ring-length);
 
-    stroke-dashoffset: var(--ring-length);
+    stroke-dashoffset:
+        var(--ring-length);
 
 }
+
 
 #progress-text {
 
     position: absolute;
 
     top: 50%;
+
     left: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%,
+            -50%);
 
-    color: var(--color-system);
+    color:
+        var(--color-system);
 
-    font-size: var(--font-progress);
+    font-size:
+        var(--font-progress);
 
-    font-family: var(--font-mono);
+    font-family:
+        var(--font-mono);
 
     pointer-events: none;
 
     user-select: none;
 
-    transition: opacity .2s ease;
+    transition:
+        opacity .2s ease;
 
 }
 
-/* ===========================
-   INFO PANEL
-=========================== */
+
+/*====================================
+INFO PANEL
+====================================*/
 
 #info-panel {
 
     position: fixed;
 
     opacity: 0;
+
     visibility: hidden;
 
     transform:
@@ -343,13 +428,20 @@ body {
 
     padding: 18px;
 
-    background: rgba(0, 0, 0, .82);
+    background:
+        rgba(0,
+            0,
+            0,
+            .82);
 
-    border: 1px solid var(--color-system);
+    border:
+        1px solid var(--color-system);
 
-    backdrop-filter: blur(12px);
+    backdrop-filter:
+        blur(12px);
 
-    color: var(--color-system);
+    color:
+        var(--color-system);
 
     pointer-events: none;
 
@@ -357,9 +449,11 @@ body {
 
 }
 
+
 #info-panel.show {
 
     opacity: 1;
+
     visibility: visible;
 
     transform:
@@ -372,34 +466,45 @@ body {
 
 }
 
+
 #info-cam {
 
     font-size: 12px;
+
     margin-bottom: 4px;
 
 }
 
+
 #info-title {
 
     font-size: 16px;
+
     font-weight: 600;
+
     margin-bottom: 8px;
 
 }
 
+
 #info-description {
 
     font-size: 13px;
+
     line-height: 1.5;
+
     white-space: pre-wrap;
+
     word-break: keep-all;
+
     overflow-wrap: anywhere;
 
 }
 
-/* ===========================
-   TYPE CURSOR
-=========================== */
+
+/*====================================
+TYPE CURSOR
+====================================*/
 
 .cursor {
 
@@ -407,11 +512,14 @@ body {
 
     margin-left: 2px;
 
-    color: var(--color-system);
+    color:
+        var(--color-system);
 
-    animation: blink .8s steps(1) infinite;
+    animation:
+        blink .8s steps(1) infinite;
 
 }
+
 
 @keyframes blink {
 
@@ -423,9 +531,10 @@ body {
 
 }
 
-/* ===========================
-   VIDEO MODAL
-=========================== */
+
+/*====================================
+VIDEO MODAL
+====================================*/
 
 #video-modal {
 
@@ -439,9 +548,14 @@ body {
 
     align-items: center;
 
-    background: rgba(0, 0, 0, .78);
+    background:
+        rgba(0,
+            0,
+            0,
+            .78);
 
-    backdrop-filter: blur(10px);
+    backdrop-filter:
+        blur(10px);
 
     opacity: 0;
 
@@ -455,9 +569,6 @@ body {
 
 }
 
-#modal-video.mirror {
-    transform: scaleX(-1);
-}
 
 #video-modal.show {
 
@@ -467,30 +578,21 @@ body {
 
 }
 
-#video-modal.warning #modal-cam,
-#video-modal.warning #modal-title,
-#video-modal.warning #modal-description,
-#video-modal.warning #modal-footer {
-
-    color: #FF4A4A;
-
-}
-
-#video-modal.warning .modal-video-wrapper {
-
-    border-color: #FF4A4A;
-
-}
 
 .modal-window {
 
     display: flex;
+
     flex-direction: column;
 
-    width: min(60vw, 1000px);
+    width:
+        min(60vw,
+            1000px);
 
     padding: 28px;
+
 }
+
 
 #modal-header {
 
@@ -500,23 +602,28 @@ body {
 
 }
 
+
 #modal-cam {
 
     font-size: 16px;
 
-    color: var(--color-system);
+    color:
+        var(--color-system);
 
     margin-bottom: 4px;
 
-    animation: blink 1s steps(1) infinite;
+    animation:
+        blink 1s steps(1) infinite;
 
 }
+
 
 #modal-title {
 
     font-size: 20px;
 
-    color: var(--color-system);
+    color:
+        var(--color-system);
 
     font-weight: 600;
 
@@ -524,23 +631,28 @@ body {
 
 }
 
+
 #modal-description {
 
     font-size: 13px;
 
     line-height: 1.5;
 
-    color: var(--color-system);
+    color:
+        var(--color-system);
 
     margin-bottom: 12px;
 
     white-space: pre-wrap;
+
     overflow-wrap: break-word;
+
     word-break: keep-all;
 
     max-width: 100ch;
 
 }
+
 
 #modal-footer {
 
@@ -548,11 +660,13 @@ body {
 
     opacity: .7;
 
-    color: var(--color-system);
+    color:
+        var(--color-system);
 
     margin-top: 16px;
 
 }
+
 
 .modal-video-wrapper {
 
@@ -560,15 +674,17 @@ body {
 
     width: 100%;
 
-    aspect-ratio: 16/9;
+    aspect-ratio: 16 / 9;
 
     background: #000;
 
-    border: 2px solid var(--color-system);
+    border:
+        2px solid var(--color-system);
 
     overflow: hidden;
 
 }
+
 
 #modal-video {
 
@@ -579,6 +695,27 @@ body {
     object-fit: contain;
 
 }
+
+
+/* CAM005 modal mirror */
+
+#modal-video.mirror {
+
+    transform:
+        scaleX(-1);
+
+}
+
+
+/* CAM005 modal camera correction */
+
+#modal-video.cam005-feed {
+
+    filter:
+        var(--cam005-camera-filter);
+
+}
+
 
 /*====================================
 CAM005
@@ -592,15 +729,25 @@ CAM005
 
 }
 
+
+/* CAM005 webcam */
+
 #webcam {
 
     width: 100%;
+
     height: 100%;
+
     object-fit: cover;
 
-    transform: scaleX(-1);
+    transform:
+        scaleX(-1);
+
+    filter:
+        var(--cam005-camera-filter);
 
 }
+
 
 #cam005-overlay {
 
@@ -612,38 +759,41 @@ CAM005
 
 }
 
-#face-box {
-
-    position: absolute;
-
-    display: none;
-
-    border: 2px solid #8AFF8A;
-
-    box-sizing: border-box;
-
-}
 
 #cam005-status {
 
     position: absolute;
 
     left: 12px;
+
     bottom: 12px;
 
     display: inline-flex;
+
     flex-direction: column;
+
     gap: 4px;
 
-    color: #8AFF8A;
+    color:
+        var(--color-system);
 
-    font-family: var(--font-mono);
+    font-family:
+        var(--font-mono);
 
-    background: rgba(0, 0, 0, .45);
+    background:
+        rgba(0,
+            0,
+            0,
+            .45);
 
-    border: 1px solid rgba(138, 255, 138, .5);
+    border:
+        1px solid rgba(138,
+            255,
+            138,
+            .5);
 
-    padding: 10px 12px;
+    padding:
+        10px 12px;
 
     width: fit-content;
 
@@ -653,13 +803,6 @@ CAM005
 
 }
 
-#cam005-status.warning {
-
-    color: #FF4A4A;
-
-    border-color: #FF4A4A;
-
-}
 
 .status-title {
 
@@ -669,11 +812,6 @@ CAM005
 
 }
 
-#cam005-status.warning .status-title {
-
-    animation: blink .8s steps(1) infinite;
-
-}
 
 .status-value {
 
@@ -682,6 +820,7 @@ CAM005
     font-weight: 600;
 
 }
+
 
 #tracking-canvas {
 
@@ -696,6 +835,7 @@ CAM005
     pointer-events: none;
 
 }
+
 
 #modal-tracking-canvas {
 

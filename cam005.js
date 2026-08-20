@@ -18,12 +18,6 @@ const modalCanvas =
 const modalCtx =
     modalCanvas.getContext("2d");
 
-const cam005Monitor =
-    document.getElementById("cam005");
-
-const videoModal =
-    document.getElementById("video-modal");
-
 const statusTitle =
     document.querySelector("#cam005-status .status-title");
 
@@ -37,31 +31,40 @@ CAM005 CONFIG
 
 const MAX_SUBJECTS = 3;
 
-const EYE_THRESHOLD = 0.014;
-
-const EYE_CLOSE_FRAMES = 20;
-
 const SUBJECT_MATCH_DISTANCE = 0.18;
 
 const FACE_BOX_PADDING = 10;
 
-const EYE_BOX_PADDING = 8;
-
 const SYSTEM_COLOR = "#8AFF8A";
 
-const WARNING_COLOR = "#FF4A4A";
+const LANDMARK_POINT_RADIUS = 4;
 
 
-const LEFT_EYE_INDEX = [
-    33, 7, 163, 144, 145, 153,
-    154, 155, 133, 173, 157,
-    158, 159, 160, 161, 246
-];
+/*====================================
+LANDMARK POINTS
+====================================*/
 
-const RIGHT_EYE_INDEX = [
-    362, 382, 381, 380, 374, 373,
-    390, 249, 263, 466, 388,
-    387, 386, 385, 384, 398
+const ANALYSIS_LANDMARK_INDEX = [
+
+    /* LEFT EYEBROW */
+    70, 63, 105, 66, 107,
+
+    /* RIGHT EYEBROW */
+    336, 296, 334, 293, 300,
+
+    /* LEFT EYE */
+    33, 160, 158, 133, 153, 144,
+
+    /* RIGHT EYE */
+    362, 385, 387, 263, 373, 380,
+
+    /* NOSE */
+    168, 6, 197, 195, 4, 1, 2, 98, 327,
+
+    /* MOUTH */
+    61, 40, 37, 0, 267, 270, 291,
+    321, 314, 17, 84, 91
+
 ];
 
 
@@ -80,11 +83,7 @@ const cam005State = {
 
     mode: "NO_SUBJECT",
 
-    trackingStarted: false,
-
-    modalOpen: false,
-
-    boxColor: SYSTEM_COLOR
+    trackingStarted: false
 
 };
 
@@ -115,18 +114,6 @@ function setState(mode) {
 
     cam005State.mode = mode;
 
-    cam005Monitor.classList.remove("warning");
-
-    statusTitle.parentElement.classList.remove("warning");
-
-    if (window.isCam005ModalOpen) {
-
-        videoModal.classList.toggle(
-            "warning",
-            mode === "WARNING"
-        );
-
-    }
 
     switch (mode) {
 
@@ -137,9 +124,6 @@ function setState(mode) {
 
             statusValue.textContent =
                 "NO SUBJECT";
-
-            cam005State.boxColor =
-                SYSTEM_COLOR;
 
             break;
 
@@ -152,9 +136,6 @@ function setState(mode) {
             statusValue.textContent =
                 "DETECTED";
 
-            cam005State.boxColor =
-                SYSTEM_COLOR;
-
             break;
 
 
@@ -165,31 +146,6 @@ function setState(mode) {
 
             statusValue.textContent =
                 "TRACKING";
-
-            cam005State.boxColor =
-                SYSTEM_COLOR;
-
-            break;
-
-
-        case "WARNING":
-
-            statusTitle.textContent =
-                "WARNING";
-
-            statusValue.textContent =
-                "EYES CLOSED";
-
-            cam005State.boxColor =
-                WARNING_COLOR;
-
-            statusTitle.parentElement.classList.add(
-                "warning"
-            );
-
-            cam005Monitor.classList.add(
-                "warning"
-            );
 
             break;
 
@@ -210,13 +166,7 @@ function createSubject(centerX, centerY) {
 
         centerX: centerX,
 
-        centerY: centerY,
-
-        eyeClosedFrames: 0,
-
-        eyesClosed: false,
-
-        warning: false
+        centerY: centerY
 
     };
 
@@ -254,12 +204,14 @@ function matchSubjects(faceData) {
         ...subjects
     ];
 
+
     faceData.forEach(face => {
 
         let closestSubject = null;
 
         let closestDistance =
             SUBJECT_MATCH_DISTANCE;
+
 
         availableSubjects.forEach(subject => {
 
@@ -273,6 +225,7 @@ function matchSubjects(faceData) {
                     subject.centerY
 
                 );
+
 
             if (distance < closestDistance) {
 
@@ -293,15 +246,21 @@ function matchSubjects(faceData) {
             closestSubject.centerY =
                 face.centerY;
 
+
             matchedSubjects.push({
+
                 face,
+
                 subject: closestSubject
+
             });
+
 
             const index =
                 availableSubjects.indexOf(
                     closestSubject
                 );
+
 
             availableSubjects.splice(
                 index,
@@ -320,11 +279,18 @@ function matchSubjects(faceData) {
                 item => item.face === face
             );
 
+
         if (alreadyMatched) return;
 
-        if (subjects.length >= MAX_SUBJECTS) {
+        if (
+            subjects.length >=
+            MAX_SUBJECTS
+        ) {
+
             return;
+
         }
+
 
         const subject =
             createSubject(
@@ -332,9 +298,13 @@ function matchSubjects(faceData) {
                 face.centerY
             );
 
+
         matchedSubjects.push({
+
             face,
+
             subject
+
         });
 
     });
@@ -405,142 +375,6 @@ function getFaceData(landmarks) {
 
 
 /*====================================
-EYE DETECTION
-====================================*/
-
-function getDistance(a, b) {
-
-    return Math.hypot(
-
-        a.x - b.x,
-
-        a.y - b.y
-
-    );
-
-}
-
-
-function isEyesClosed(landmarks) {
-
-    const leftTop =
-        landmarks[159];
-
-    const leftBottom =
-        landmarks[145];
-
-    const rightTop =
-        landmarks[386];
-
-    const rightBottom =
-        landmarks[374];
-
-
-    const leftEye =
-        getDistance(
-            leftTop,
-            leftBottom
-        );
-
-    const rightEye =
-        getDistance(
-            rightTop,
-            rightBottom
-        );
-
-
-    const average =
-        (leftEye + rightEye) / 2;
-
-
-    return average < EYE_THRESHOLD;
-
-}
-
-
-/*====================================
-EYE BOX
-====================================*/
-
-function getEyeBox(
-    landmarks,
-    indices,
-    canvas
-) {
-
-    let minX = 1;
-
-    let minY = 1;
-
-    let maxX = 0;
-
-    let maxY = 0;
-
-
-    for (const index of indices) {
-
-        const point =
-            landmarks[index];
-
-        minX =
-            Math.min(
-                minX,
-                point.x
-            );
-
-        minY =
-            Math.min(
-                minY,
-                point.y
-            );
-
-        maxX =
-            Math.max(
-                maxX,
-                point.x
-            );
-
-        maxY =
-            Math.max(
-                maxY,
-                point.y
-            );
-
-    }
-
-
-    const padding =
-        EYE_BOX_PADDING;
-
-
-    return {
-
-        x:
-            minX *
-            canvas.width -
-            padding,
-
-        y:
-            minY *
-            canvas.height -
-            padding,
-
-        w:
-            (maxX - minX) *
-            canvas.width +
-            padding * 2,
-
-        h:
-            (maxY - minY) *
-            canvas.height +
-            padding * 2
-
-    };
-
-}
-
-
-/*====================================
 FACE BOX
 ====================================*/
 
@@ -581,6 +415,72 @@ function getFaceBox(
 
 
 /*====================================
+DRAW LANDMARK POINTS
+====================================*/
+
+function drawLandmarkPoints(
+    context,
+    canvas,
+    landmarks
+) {
+
+    context.fillStyle =
+        SYSTEM_COLOR;
+
+
+    for (
+        const index
+        of ANALYSIS_LANDMARK_INDEX
+    ) {
+
+        const point =
+            landmarks[index];
+
+
+        if (!point) continue;
+
+
+        /*
+        웹캠 영상이 mirror 상태이므로
+        X 좌표만 반전
+        */
+
+        const x =
+            canvas.width -
+            point.x *
+            canvas.width;
+
+        const y =
+            point.y *
+            canvas.height;
+
+
+        context.beginPath();
+
+
+        context.arc(
+
+            x,
+
+            y,
+
+            LANDMARK_POINT_RADIUS,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        context.fill();
+
+    }
+
+}
+
+
+/*====================================
 DRAW SUBJECT
 ====================================*/
 
@@ -591,11 +491,23 @@ function drawSubject(
     subject
 ) {
 
+    /*
+    ================================
+    FACE BOUNDING BOX
+    ================================
+    */
+
     const faceBox =
         getFaceBox(
             face,
             canvas
         );
+
+
+    /*
+    웹캠 영상이 mirror 상태이므로
+    Bounding Box의 X 좌표만 반전
+    */
 
     faceBox.x =
         canvas.width -
@@ -603,48 +515,20 @@ function drawSubject(
         faceBox.w;
 
 
-    const leftEyeBox =
-        getEyeBox(
-            face.landmarks,
-            LEFT_EYE_INDEX,
-            canvas
-        );
+    context.save();
 
 
-    const rightEyeBox =
-        getEyeBox(
-            face.landmarks,
-            RIGHT_EYE_INDEX,
-            canvas
-        );
-
-    leftEyeBox.x =
-        canvas.width -
-        leftEyeBox.x -
-        leftEyeBox.w;
-
-    rightEyeBox.x =
-        canvas.width -
-        rightEyeBox.x -
-        rightEyeBox.w;
-
-
-    const color =
-        subject.warning
-            ? WARNING_COLOR
-            : SYSTEM_COLOR;
-
+    /*
+    ================================
+    BOUNDING BOX
+    ================================
+    */
 
     context.strokeStyle =
-        color;
-
-    context.fillStyle =
-        color;
+        SYSTEM_COLOR;
 
     context.lineWidth = 2;
 
-
-    /* FACE */
 
     context.strokeRect(
 
@@ -659,37 +543,28 @@ function drawSubject(
     );
 
 
-    /* LEFT EYE */
+    /*
+    ================================
+    FACIAL LANDMARK POINTS
+    ================================
+    */
 
-    context.strokeRect(
+    drawLandmarkPoints(
 
-        leftEyeBox.x,
+        context,
 
-        leftEyeBox.y,
+        canvas,
 
-        leftEyeBox.w,
-
-        leftEyeBox.h
-
-    );
-
-
-    /* RIGHT EYE */
-
-    context.strokeRect(
-
-        rightEyeBox.x,
-
-        rightEyeBox.y,
-
-        rightEyeBox.w,
-
-        rightEyeBox.h
+        face.landmarks
 
     );
 
 
-    /* SUBJECT LABEL */
+    /*
+    ================================
+    SUBJECT LABEL
+    ================================
+    */
 
     const label =
         `SUBJECT-${String(
@@ -697,8 +572,12 @@ function drawSubject(
         ).padStart(2, "0")}`;
 
 
+    context.fillStyle =
+        SYSTEM_COLOR;
+
+
     context.font =
-        "12px 'JetBrains Mono', monospace";
+        "13px 'JetBrains Mono', monospace";
 
 
     context.textBaseline =
@@ -711,9 +590,12 @@ function drawSubject(
 
         faceBox.x,
 
-        faceBox.y - 6
+        faceBox.y - 8
 
     );
+
+
+    context.restore();
 
 }
 
@@ -745,77 +627,6 @@ function drawSubjects(
 
         }
     );
-
-}
-
-
-/*====================================
-UPDATE SUBJECT STATES
-====================================*/
-
-function updateSubjectStates(
-    matchedSubjects
-) {
-
-    let hasWarning = false;
-
-
-    matchedSubjects.forEach(
-        item => {
-
-            const subject =
-                item.subject;
-
-            const eyesClosed =
-                isEyesClosed(
-                    item.face.landmarks
-                );
-
-
-            if (eyesClosed) {
-
-                subject.eyeClosedFrames++;
-
-            } else {
-
-                subject.eyeClosedFrames = 0;
-
-            }
-
-
-            if (
-                subject.eyeClosedFrames >
-                EYE_CLOSE_FRAMES
-            ) {
-
-                subject.eyesClosed =
-                    true;
-
-                subject.warning =
-                    true;
-
-            } else {
-
-                subject.eyesClosed =
-                    false;
-
-                subject.warning =
-                    false;
-
-            }
-
-
-            if (subject.warning) {
-
-                hasWarning = true;
-
-            }
-
-        }
-    );
-
-
-    return hasWarning;
 
 }
 
@@ -886,7 +697,11 @@ async function detectFace() {
     }
 
 
-    /* CANVAS SIZE */
+    /*
+    ================================
+    CANVAS SIZE
+    ================================
+    */
 
     if (
         canvas.width !==
@@ -922,7 +737,11 @@ async function detectFace() {
     }
 
 
-    /* CLEAR */
+    /*
+    ================================
+    CLEAR
+    ================================
+    */
 
     ctx.clearRect(
 
@@ -950,7 +769,11 @@ async function detectFace() {
     );
 
 
-    /* DETECT */
+    /*
+    ================================
+    DETECT
+    ================================
+    */
 
     const result =
         faceLandmarker.detectForVideo(
@@ -973,7 +796,11 @@ async function detectFace() {
             );
 
 
-    /* NO SUBJECT */
+    /*
+    ================================
+    NO SUBJECT
+    ================================
+    */
 
     if (
         detectedFaces.length === 0
@@ -983,25 +810,34 @@ async function detectFace() {
             trackingTimeout
         );
 
+
         cam005State.trackingStarted =
             false;
 
+
         resetSubjects();
+
 
         setState(
             "NO_SUBJECT"
         );
 
+
         requestAnimationFrame(
             detectFace
         );
+
 
         return;
 
     }
 
 
-    /* SUBJECT DETECTED */
+    /*
+    ================================
+    SUBJECT DETECTED
+    ================================
+    */
 
     if (
         !cam005State.trackingStarted
@@ -1009,6 +845,7 @@ async function detectFace() {
 
         cam005State.trackingStarted =
             true;
+
 
         setState(
             "SUBJECT_DETECTED"
@@ -1025,16 +862,9 @@ async function detectFace() {
 
                 () => {
 
-                    if (
-                        cam005State.mode !==
-                        "WARNING"
-                    ) {
-
-                        setState(
-                            "TRACKING"
-                        );
-
-                    }
+                    setState(
+                        "TRACKING"
+                    );
 
                 },
 
@@ -1045,7 +875,11 @@ async function detectFace() {
     }
 
 
-    /* MATCH */
+    /*
+    ================================
+    MATCH SUBJECTS
+    ================================
+    */
 
     const matchedSubjects =
         matchSubjects(
@@ -1053,35 +887,11 @@ async function detectFace() {
         );
 
 
-    /* UPDATE STATES */
-
-    const hasWarning =
-        updateSubjectStates(
-            matchedSubjects
-        );
-
-
-    /* GLOBAL WARNING */
-
-    if (hasWarning) {
-
-        setState(
-            "WARNING"
-        );
-
-    } else if (
-        cam005State.mode ===
-        "WARNING"
-    ) {
-
-        setState(
-            "TRACKING"
-        );
-
-    }
-
-
-    /* DRAW GRID */
+    /*
+    ================================
+    DRAW GRID
+    ================================
+    */
 
     drawSubjects(
 
@@ -1094,7 +904,11 @@ async function detectFace() {
     );
 
 
-    /* DRAW MODAL */
+    /*
+    ================================
+    DRAW MODAL
+    ================================
+    */
 
     if (
         window.isCam005ModalOpen
