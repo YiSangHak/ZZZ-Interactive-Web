@@ -82,7 +82,7 @@ video {
     /* CAM005 Camera */
 
     --cam005-camera-filter:
-        brightness(1.04) contrast(.97) saturate(.98) blur(.25px);
+        brightness(1.07) contrast(.97) saturate(.98) blur(.5px);
 
 }
 

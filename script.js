@@ -545,32 +545,48 @@ function resetModalMedia() {
         false;
 
 
+    /* MODAL COLOR RESET */
+
+    modalCam.style.color =
+        "";
+
+    modalTitle.style.color =
+        "";
+
+    modalDescription.style.color =
+        "";
+
+    document
+        .getElementById("modal-footer")
+        .style.color =
+        "";
+
+    document
+        .querySelector(".modal-video-wrapper")
+        .style.borderColor =
+        "";
+
+
     /* VIDEO */
 
     modalVideo.pause();
 
-
     modalVideo.srcObject =
         null;
-
 
     modalVideo.removeAttribute(
         "src"
     );
 
-
     modalVideo.load();
-
 
     modalVideo.classList.remove(
         "mirror"
     );
 
-
     modalVideo.classList.remove(
         "cam005-feed"
     );
-
 
     modalVideo.style.display =
         "none";
