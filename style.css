@@ -585,10 +585,10 @@ VIDEO MODAL
         center;
 
     background:
-        rgba(0, 0, 0, .78);
+        rgba(0, 0, 0, .9);
 
     backdrop-filter:
-        blur(10px);
+        blur(20px);
 
     opacity: 0;
 
@@ -622,8 +622,8 @@ VIDEO MODAL
         column;
 
     width:
-        min(60vw,
-            1000px);
+        min(70vw,
+            1160px);
 
     padding: 28px;
 
