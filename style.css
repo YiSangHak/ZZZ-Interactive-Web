@@ -670,15 +670,27 @@ VIDEO MODAL
 
 
 #modal-description {
+
     font-size: 16px;
+
     line-height: 1.5;
-    color: var(--color-system);
+
+    color:
+        var(--color-system);
+
     margin-bottom: 12px;
 
     width: 100%;
-    white-space: pre-wrap;
-    word-break: keep-all;
-    overflow-wrap: break-word;
+
+    white-space:
+        pre-wrap;
+
+    word-break:
+        keep-all;
+
+    overflow-wrap:
+        break-word;
+
 }
 
 
@@ -1406,11 +1418,6 @@ CAM007 SVG LOGO
 }
 
 
-/*
-신호가 순간적으로 잡히는 느낌만 표현.
-좌우 글리치/노이즈 없음.
-*/
-
 @keyframes cam007SignalLock {
 
     0% {
@@ -1599,56 +1606,588 @@ PORTRAIT MOBILE / TABLET
 
 @media (orientation: portrait) and (max-width: 1024px) {
 
-    body {
-        width: 100vh;
-        height: 100vw;
+    /*
+    Portrait 기기를 가로 UI처럼 사용한다.
+
+    회전 이후의 논리적 화면 크기:
+    width  = 원래 viewport height
+    height = 원래 viewport width
+    */
+
+    html {
+
+        width: 100%;
+
+        height: 100%;
+
         overflow: hidden;
 
-        transform: rotate(90deg);
-        transform-origin: top left;
+        background:
+            var(--color-bg);
+
+    }
+
+
+    body {
+
+        width: 100vh;
+
+        height: 100vw;
+
+        overflow: hidden;
 
         position: fixed;
+
         top: 0;
+
         left: 100vw;
+
+        transform:
+            rotate(90deg);
+
+        transform-origin:
+            top left;
+
+        background:
+            var(--color-bg);
+
     }
+
+
+    /*================================
+    MONITOR WALL
+    ================================*/
+
+    /*
+    전체 3×3 Monitor Wall 자체를
+    항상 16:9로 유지한다.
+
+    가로/세로 중 먼저 닿는 축을 기준으로
+    최대 크기를 사용한다.
+
+    남는 영역은 body의 #000000이
+    자연스럽게 Letterbox 역할을 한다.
+    */
 
     .monitor-wall {
-        width: 100vh;
-        height: 100vw;
+
+        position: absolute;
+
+        top: 50%;
+
+        left: 50%;
+
+        width:
+            min(100vh,
+                calc(100vw * 16 / 9));
+
+        height: auto;
+
+        aspect-ratio:
+            16 / 9;
+
+        transform:
+            translate(-50%, -50%);
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        grid-template-rows:
+            repeat(3, minmax(0, 1fr));
+
     }
 
-    #video-modal {
-        width: 100vh;
-        height: 100vw;
+
+    /*
+    Touch 환경에서는 hover 상태가
+    Tap 이후 남을 수 있으므로 제거.
+    */
+
+    .monitor:hover {
+
+        border:
+            var(--border);
+
+        z-index: auto;
+
     }
 
 
-    /* MOBILE TYPOGRAPHY */
+    .monitor:hover .label {
+
+        border-color:
+            var(--color-border);
+
+        color:
+            var(--color-white);
+
+    }
+
+
+    /*================================
+    TOUCH UI
+    ================================*/
+
+    /*
+    모바일에는 실제 마우스 포인터가 없으므로
+    Desktop Cursor UI를 표시하지 않는다.
+    */
+
+    #crosshair,
+    #cursor-ui,
+    #info-panel {
+
+        display:
+            none !important;
+
+    }
+
+
+    /*================================
+    MOBILE TYPOGRAPHY
+    ================================*/
 
     :root {
-        --font-xs: 7px;
-        --font-sm: 9px;
-        --font-progress: 9px;
+
+        --font-xs:
+            7px;
+
+        --font-sm:
+            9px;
+
+        --font-progress:
+            9px;
+
     }
+
 
     .label {
-        padding: 4px 7px;
+
+        top: 5px;
+
+        left: 5px;
+
+        padding:
+            3px 6px;
+
+        font-size:
+            8px;
+
+        line-height:
+            1.2;
+
     }
+
+
+    .cam-id {
+
+        font-size:
+            8px;
+
+    }
+
+
+    /*================================
+    CAM005 MOBILE
+    ================================*/
+
+    #cam005-status {
+
+        left: 6px;
+
+        bottom: 6px;
+
+        gap: 2px;
+
+        padding:
+            5px 7px;
+
+        border-width:
+            .5px;
+
+    }
+
+
+    .status-title {
+
+        font-size:
+            7px;
+
+    }
+
+
+    .status-value {
+
+        font-size:
+            9px;
+
+    }
+
+
+    /*================================
+    CAM007 MOBILE
+    ================================*/
+
+    .cam007-content {
+
+        width:
+            72%;
+
+        gap:
+            4px;
+
+    }
+
+
+    .cam007-state {
+
+        font-size:
+            7px;
+
+    }
+
+
+    .cam007-main {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .cam007-status-row {
+
+        gap:
+            6px;
+
+        font-size:
+            6px;
+
+    }
+
+
+    .cam007-progress-track {
+
+        height:
+            4px;
+
+    }
+
+
+    .cam007-meta {
+
+        gap:
+            2px 8px;
+
+        font-size:
+            5.5px;
+
+        line-height:
+            1.25;
+
+    }
+
+
+    .cam007-small {
+
+        font-size:
+            5.5px;
+
+    }
+
+
+    .cam007-logo {
+
+        padding:
+            2px 0;
+
+    }
+
+
+    .cam007-logo img {
+
+        width:
+            95px;
+
+        max-width:
+            62%;
+
+    }
+
+
+    /*================================
+    CAM009 MOBILE
+    ================================*/
+
+    .cam009-terminal {
+
+        padding:
+            28px 8px 8px 8px;
+
+        font-size:
+            6.5px;
+
+        line-height:
+            1.4;
+
+    }
+
+
+    .terminal-line {
+
+        min-height:
+            1.4em;
+
+    }
+
+
+    /*================================
+    VIDEO MODAL
+    ================================*/
+
+    #video-modal {
+
+        width:
+            100%;
+
+        height:
+            100%;
+
+        inset: 0;
+
+        padding:
+            0;
+
+        background:
+            rgba(0, 0, 0, .96);
+
+        backdrop-filter:
+            blur(14px);
+
+    }
+
+
+    /*
+    데스크톱의 70vw 규칙을 제거.
+
+    모바일에서는 회전된 화면의
+    사용 가능한 세로 높이를 기준으로
+    16:9 Media Frame이 최대한 커지도록 한다.
+    */
+
+    .modal-window {
+
+        width:
+            min(94%,
+                calc((100vw - 58px) * 16 / 9));
+
+        max-width:
+            none;
+
+        padding:
+            8px 10px;
+
+        margin: 0;
+
+        justify-content:
+            center;
+
+    }
+
+
+    /*================================
+    MODAL HEADER
+    ================================*/
+
+    /*
+    모바일에서는 CAM ID와 Title을
+    한 줄에 배치하여 영상 영역을
+    더 크게 확보한다.
+    */
+
+    #modal-header {
+
+        display: flex;
+
+        flex-direction:
+            row;
+
+        align-items:
+            baseline;
+
+        gap:
+            10px;
+
+        width:
+            100%;
+
+        min-height:
+            24px;
+
+    }
+
 
     #modal-cam {
-        font-size: 14px;
+
+        flex:
+            0 0 auto;
+
+        margin:
+            0 0 5px 0;
+
+        font-size:
+            10px;
+
+        line-height:
+            1.2;
+
     }
+
 
     #modal-title {
-        font-size: 18px;
-        margin-bottom: 7px;
+
+        flex:
+            1 1 auto;
+
+        min-width: 0;
+
+        margin:
+            0 0 5px 0;
+
+        font-size:
+            14px;
+
+        line-height:
+            1.2;
+
+        white-space:
+            nowrap;
+
+        overflow:
+            hidden;
+
+        text-overflow:
+            ellipsis;
+
     }
 
 
-    /* 모바일에서는 설명 / 하단 안내 제거 */
+    /*
+    모바일에서는 설명문과
+    하단 안내를 표시하지 않는다.
+    */
 
     #modal-description,
     #modal-footer {
-        display: none;
+
+        display:
+            none;
+
     }
+
+
+    /*================================
+    MODAL MEDIA
+    ================================*/
+
+    .modal-video-wrapper {
+
+        width:
+            100%;
+
+        aspect-ratio:
+            16 / 9;
+
+        border-width:
+            1px;
+
+    }
+
+
+    /*================================
+    CAM007 MODAL MOBILE
+    ================================*/
+
+    .cam007-content-modal {
+
+        width:
+            72%;
+
+        gap:
+            7px;
+
+    }
+
+
+    .cam007-main-modal {
+
+        font-size:
+            20px;
+
+    }
+
+
+    .cam007-status-row-modal {
+
+        font-size:
+            8px;
+
+    }
+
+
+    .cam007-progress-track-modal {
+
+        height:
+            5px;
+
+    }
+
+
+    .cam007-logo-modal img {
+
+        width:
+            165px;
+
+        max-width:
+            52%;
+
+    }
+
+
+    .cam007-content-modal .cam007-meta {
+
+        gap:
+            3px 12px;
+
+        font-size:
+            7px;
+
+    }
+
+
+    .cam007-content-modal .cam007-small {
+
+        font-size:
+            7px;
+
+    }
+
+
+    /*================================
+    CAM009 MODAL MOBILE
+    ================================*/
+
+    #modal-cam009-terminal {
+
+        padding:
+            14px;
+
+        font-size:
+            9px;
+
+        line-height:
+            1.45;
+
+    }
+
 }

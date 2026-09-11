@@ -17,6 +17,15 @@
         modalCanvas.getContext("2d");
 
 
+    /*
+    모바일에서 Canvas 탭 시
+    브라우저 기본 제스처를 방지한다.
+    */
+
+    modalCanvas.style.touchAction =
+        "none";
+
+
     /*====================================
     ASSETS
     ====================================*/
@@ -34,6 +43,7 @@
     fenceImage.src =
         "assets/images/cam008-fence.png";
 
+
     const gameAudio =
         new Audio(
             "assets/audio/CAM-008-audio.mp3"
@@ -48,7 +58,6 @@
         0.15;
 
 
-
     const gameOverAudio =
         new Audio(
             "assets/audio/CAM-008-gameover.wav"
@@ -58,15 +67,16 @@
     gameOverAudio.volume =
         0.6;
 
+
     const jumpAudio =
         new Audio(
             "assets/audio/CAM-008-jump.wav"
         );
 
+
     jumpAudio.volume =
         0.4;
 
-        
 
     function playGameAudio() {
 
@@ -315,6 +325,19 @@
 
 
     /*====================================
+    INPUT MODE
+    ====================================*/
+
+    function usesTouchControls() {
+
+        return window.matchMedia(
+            "(pointer: coarse)"
+        ).matches;
+
+    }
+
+
+    /*====================================
     IMAGE RATIO
     ====================================*/
 
@@ -350,13 +373,28 @@
         context
     ) {
 
-        const rect =
-            canvas.getBoundingClientRect();
+        /*
+        clientWidth / clientHeight를 사용한다.
+
+        getBoundingClientRect()는
+        모바일에서 body에 적용된 rotate(90deg)의
+        영향을 받아 width / height가 뒤바뀔 수 있다.
+
+        clientWidth / clientHeight는
+        회전 이전 실제 layout size를 사용하므로
+        CAM008의 16:9 좌표계를 안정적으로 유지한다.
+        */
+
+        const width =
+            canvas.clientWidth;
+
+        const height =
+            canvas.clientHeight;
 
 
         if (
-            rect.width <= 0 ||
-            rect.height <= 0
+            width <= 0 ||
+            height <= 0
         ) {
 
             return null;
@@ -373,14 +411,14 @@
 
         const pixelWidth =
             Math.round(
-                rect.width *
+                width *
                 dpr
             );
 
 
         const pixelHeight =
             Math.round(
-                rect.height *
+                height *
                 dpr
             );
 
@@ -421,11 +459,9 @@
 
         return {
 
-            width:
-                rect.width,
+            width,
 
-            height:
-                rect.height
+            height
 
         };
 
@@ -1352,6 +1388,10 @@
             );
 
 
+        const touchControls =
+            usesTouchControls();
+
+
         context.textAlign =
             "center";
 
@@ -1378,7 +1418,9 @@
 
             context.fillText(
 
-                "PRESS SPACE TO START",
+                touchControls
+                    ? "TAP TO START"
+                    : "PRESS SPACE TO START",
 
                 width / 2,
 
@@ -1412,7 +1454,9 @@
 
             context.fillText(
 
-                "SPACE : JUMP",
+                touchControls
+                    ? "TAP : JUMP"
+                    : "SPACE : JUMP",
 
                 width / 2,
 
@@ -1503,7 +1547,9 @@
 
             context.fillText(
 
-                "PRESS SPACE TO RESTART",
+                touchControls
+                    ? "TAP TO RESTART"
+                    : "PRESS SPACE TO RESTART",
 
                 width / 2,
 
@@ -1667,17 +1713,116 @@
 
 
     /*====================================
+    GAME ACTION
+    ====================================*/
+
+    /*
+    Keyboard와 Touch가
+    같은 게임 로직을 공유한다.
+
+    READY     → START
+    PLAYING   → JUMP
+    GAME_OVER → RESTART
+    */
+
+    function handleGameAction() {
+
+        if (
+            !window.isCam008ModalOpen
+        ) {
+
+            return;
+
+        }
+
+
+        const metrics =
+            getMetrics(
+                modalWidth,
+                modalHeight
+            );
+
+
+        /*================================
+        START
+        ================================*/
+
+        if (
+            game.mode ===
+            "READY"
+        ) {
+
+            resetGame(
+                modalWidth,
+                modalHeight,
+                "PLAYING"
+            );
+
+
+            stopGameOverAudio();
+
+
+            playGameAudio();
+
+
+            return;
+
+        }
+
+
+        /*================================
+        RESTART
+        ================================*/
+
+        if (
+            game.mode ===
+            "GAME_OVER"
+        ) {
+
+            resetGame(
+                modalWidth,
+                modalHeight,
+                "PLAYING"
+            );
+
+
+            stopGameOverAudio();
+
+
+            playGameAudio();
+
+
+            return;
+
+        }
+
+
+        /*================================
+        JUMP
+        ================================*/
+
+        if (
+            game.mode ===
+            "PLAYING"
+        ) {
+
+            jump(
+                game,
+                metrics.scale
+            );
+
+        }
+
+    }
+
+
+    /*====================================
     KEYBOARD INPUT
     ====================================*/
 
     document.addEventListener(
         "keydown",
         event => {
-
-            /*
-            CAM008 Modal이 아닐 때
-            SPACE 무시
-            */
 
             if (
                 !window.isCam008ModalOpen
@@ -1701,82 +1846,52 @@
             event.preventDefault();
 
 
-            const metrics =
-                getMetrics(
-                    modalWidth,
-                    modalHeight
-                );
+            handleGameAction();
+
+        }
+    );
 
 
-            /*================================
-            START
-            ================================*/
+    /*====================================
+    TOUCH / POINTER INPUT
+    ====================================*/
+
+    modalCanvas.addEventListener(
+        "pointerdown",
+        event => {
+
+            /*
+            PC Mouse 클릭은 게임 입력으로 사용하지 않는다.
+
+            Touch / Stylus 환경에서만
+            Tap 입력으로 처리한다.
+            */
 
             if (
-                game.mode ===
-                "READY"
+                event.pointerType ===
+                "mouse"
             ) {
-
-                resetGame(
-                    modalWidth,
-                    modalHeight,
-                    "PLAYING"
-                );
-
-
-                stopGameOverAudio();
-
-
-                playGameAudio();
-
 
                 return;
 
             }
 
 
-            /*================================
-            RESTART
-            ================================*/
-
             if (
-                game.mode ===
-                "GAME_OVER"
+                !window.isCam008ModalOpen
             ) {
-
-                resetGame(
-                    modalWidth,
-                    modalHeight,
-                    "PLAYING"
-                );
-
-
-                stopGameOverAudio();
-
-
-                playGameAudio();
-
 
                 return;
 
             }
 
 
-            /*================================
-            JUMP
-            ================================*/
+            event.preventDefault();
 
-            if (
-                game.mode ===
-                "PLAYING"
-            ) {
+            event.stopPropagation();
 
-                jump(
-                    game,
-                    metrics.scale
-                );
 
-            }
+            handleGameAction();
 
         }
     );
