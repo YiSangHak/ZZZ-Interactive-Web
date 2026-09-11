@@ -34,6 +34,75 @@
     fenceImage.src =
         "assets/images/cam008-fence.png";
 
+    const gameAudio =
+        new Audio(
+            "assets/audio/CAM-008-audio.mp3"
+        );
+
+
+    gameAudio.loop =
+        true;
+
+
+    gameAudio.volume =
+        0.15;
+
+
+
+    const gameOverAudio =
+        new Audio(
+            "assets/audio/CAM-008-gameover.wav"
+        );
+
+
+    gameOverAudio.volume =
+        0.6;
+
+    const jumpAudio =
+        new Audio(
+            "assets/audio/CAM-008-jump.wav"
+        );
+
+    jumpAudio.volume =
+        0.4;
+
+        
+
+    function playGameAudio() {
+
+        gameAudio.pause();
+
+        gameAudio.currentTime =
+            0;
+
+
+        gameAudio.play()
+            .catch(
+                () => { }
+            );
+
+    }
+
+
+    function stopGameAudio() {
+
+        gameAudio.pause();
+
+        gameAudio.currentTime =
+            0;
+
+    }
+
+
+    function stopGameOverAudio() {
+
+        gameOverAudio.pause();
+
+        gameOverAudio.currentTime =
+            0;
+
+    }
+
 
     /*====================================
     COLORS
@@ -545,6 +614,27 @@
         state.grounded =
             false;
 
+
+        /*
+        MODAL GAME에서만
+        JUMP 효과음 재생
+        */
+
+        if (
+            state === game
+        ) {
+
+            jumpAudio.currentTime =
+                0;
+
+
+            jumpAudio.play()
+                .catch(
+                    () => { }
+                );
+
+        }
+
     }
 
 
@@ -991,6 +1081,20 @@
             game.mode =
                 "GAME_OVER";
 
+
+            stopGameAudio();
+
+
+            gameOverAudio.currentTime =
+                0;
+
+
+            gameOverAudio.play()
+                .catch(
+                    () => { }
+                );
+
+
             return;
 
         }
@@ -1355,7 +1459,7 @@
 
             context.fillText(
 
-                "SIMULATION INTERRUPTED",
+                "GOOD NIGHT!",
 
                 width / 2,
 
@@ -1620,6 +1724,12 @@
                 );
 
 
+                stopGameOverAudio();
+
+
+                playGameAudio();
+
+
                 return;
 
             }
@@ -1639,6 +1749,12 @@
                     modalHeight,
                     "PLAYING"
                 );
+
+
+                stopGameOverAudio();
+
+
+                playGameAudio();
 
 
                 return;
@@ -1714,6 +1830,17 @@
             );
 
         } else {
+
+            if (
+                wasModalOpen
+            ) {
+
+                stopGameAudio();
+
+                stopGameOverAudio();
+
+            }
+
 
             wasModalOpen =
                 false;

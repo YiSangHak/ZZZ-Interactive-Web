@@ -109,6 +109,93 @@ const WARNING_PROBABILITY =
 
 
 /*====================================
+AUDIO
+====================================*/
+
+const normalAudio =
+    new Audio(
+        "assets/audio/CAM-005-normal.wav"
+    );
+
+
+normalAudio.volume =
+    0.45;
+
+
+const warningAudio =
+    new Audio(
+        "assets/audio/CAM-005-warning.wav"
+    );
+
+
+warningAudio.loop =
+    true;
+
+
+warningAudio.volume =
+    0.55;
+
+
+function playNormalAudio() {
+
+    normalAudio.pause();
+
+    normalAudio.currentTime =
+        0;
+
+
+    normalAudio.play()
+        .catch(
+            () => { }
+        );
+
+}
+
+
+function stopNormalAudio() {
+
+    normalAudio.pause();
+
+    normalAudio.currentTime =
+        0;
+
+}
+
+
+function playWarningAudio() {
+
+    if (
+        !warningAudio.paused
+    ) {
+
+        return;
+
+    }
+
+
+    warningAudio.currentTime =
+        0;
+
+
+    warningAudio.play()
+        .catch(
+            () => { }
+        );
+
+}
+
+
+function stopWarningAudio() {
+
+    warningAudio.pause();
+
+    warningAudio.currentTime =
+        0;
+
+}
+
+
+/*====================================
 LANDMARK POINTS
 ====================================*/
 
@@ -491,6 +578,9 @@ function createSubject(
             false,
 
         warning:
+            false,
+
+        audioFeedbackPlayed:
             false,
 
         lastSeenAt:
@@ -1444,6 +1534,144 @@ function updateGlobalStatus(
 
 
 /*====================================
+AUDIO FEEDBACK
+====================================*/
+
+function updateAudioFeedback(
+    matchedSubjects
+) {
+
+    /*
+    CAM005 Modal에서만
+    결과 오디오를 재생한다.
+    */
+
+    if (
+        !window.isCam005ModalOpen
+    ) {
+
+        stopNormalAudio();
+
+        stopWarningAudio();
+
+        return;
+
+    }
+
+
+    const completedSubjects =
+        matchedSubjects.filter(
+            item =>
+                item.subject
+                    .analysisComplete
+        );
+
+
+    /*
+    한 명이라도 WARNING이면
+    WARNING Audio를 우선한다.
+    */
+
+    const hasWarning =
+        completedSubjects.some(
+            item =>
+                item.subject
+                    .warning
+        );
+
+
+    if (
+        hasWarning
+    ) {
+
+        stopNormalAudio();
+
+        playWarningAudio();
+
+
+        /*
+        동시에 완료된 NORMAL 결과가
+        WARNING 뒤에 늦게 재생되지 않도록 처리.
+        */
+
+        completedSubjects.forEach(
+            item => {
+
+                if (
+                    !item.subject
+                        .warning
+                ) {
+
+                    item.subject
+                        .audioFeedbackPlayed =
+                        true;
+
+                }
+
+            }
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+    WARNING 대상이 없으면
+    반복 경고음을 중지한다.
+    */
+
+    stopWarningAudio();
+
+
+    /*
+    아직 소리 피드백을 재생하지 않은
+    NORMAL 결과만 확인한다.
+    */
+
+    const pendingNormalSubjects =
+        completedSubjects.filter(
+            item =>
+                !item.subject
+                    .warning &&
+                !item.subject
+                    .audioFeedbackPlayed
+        );
+
+
+    if (
+        pendingNormalSubjects.length ===
+        0
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+    여러 명이 동시에 정상 결과가 나와도
+    효과음은 한 번만 재생한다.
+    */
+
+    playNormalAudio();
+
+
+    pendingNormalSubjects.forEach(
+        item => {
+
+            item.subject
+                .audioFeedbackPlayed =
+                true;
+
+        }
+    );
+
+}
+
+
+/*====================================
 CREATE FACE LANDMARKER
 ====================================*/
 
@@ -1635,6 +1863,11 @@ async function detectFace() {
         );
 
 
+        stopNormalAudio();
+
+        stopWarningAudio();
+
+
         requestAnimationFrame(
             detectFace
         );
@@ -1696,6 +1929,15 @@ async function detectFace() {
     ================================*/
 
     updateGlobalStatus(
+        matchedSubjects
+    );
+
+
+    /*================================
+    AUDIO FEEDBACK
+    ================================*/
+
+    updateAudioFeedback(
         matchedSubjects
     );
 

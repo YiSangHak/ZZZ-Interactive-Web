@@ -642,7 +642,7 @@ VIDEO MODAL
 
 #modal-cam {
 
-    font-size: 16px;
+    font-size: 18px;
 
     color:
         var(--color-system);
@@ -657,7 +657,7 @@ VIDEO MODAL
 
 #modal-title {
 
-    font-size: 20px;
+    font-size: 24px;
 
     color:
         var(--color-system);
@@ -670,27 +670,15 @@ VIDEO MODAL
 
 
 #modal-description {
-
-    font-size: 13px;
-
+    font-size: 16px;
     line-height: 1.5;
-
-    color:
-        var(--color-system);
-
+    color: var(--color-system);
     margin-bottom: 12px;
 
-    white-space:
-        pre-wrap;
-
-    overflow-wrap:
-        break-word;
-
-    word-break:
-        keep-all;
-
-    max-width: 100ch;
-
+    width: 100%;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 
@@ -1602,4 +1590,65 @@ CAM007 MODAL
 
     font-size: 12px;
 
+}
+
+
+/*====================================
+PORTRAIT MOBILE / TABLET
+====================================*/
+
+@media (orientation: portrait) and (max-width: 1024px) {
+
+    body {
+        width: 100vh;
+        height: 100vw;
+        overflow: hidden;
+
+        transform: rotate(90deg);
+        transform-origin: top left;
+
+        position: fixed;
+        top: 0;
+        left: 100vw;
+    }
+
+    .monitor-wall {
+        width: 100vh;
+        height: 100vw;
+    }
+
+    #video-modal {
+        width: 100vh;
+        height: 100vw;
+    }
+
+
+    /* MOBILE TYPOGRAPHY */
+
+    :root {
+        --font-xs: 7px;
+        --font-sm: 9px;
+        --font-progress: 9px;
+    }
+
+    .label {
+        padding: 4px 7px;
+    }
+
+    #modal-cam {
+        font-size: 14px;
+    }
+
+    #modal-title {
+        font-size: 18px;
+        margin-bottom: 7px;
+    }
+
+
+    /* 모바일에서는 설명 / 하단 안내 제거 */
+
+    #modal-description,
+    #modal-footer {
+        display: none;
+    }
 }

@@ -84,6 +84,105 @@ const modalDescription =
 let isModalOpen =
     false;
 
+/*====================================
+MODAL AUDIO
+====================================*/
+
+const MODAL_AUDIO = {
+
+    "CAM-001":
+        "assets/audio/CAM-001-audio.wav",
+    
+    "CAM-002":
+        "assets/audio/CAM-002-audio.wav",
+
+    "CAM-003":
+        "assets/audio/CAM-003-audio.wav",
+
+    "CAM-004":
+        "assets/audio/CAM-004-audio.wav",
+
+
+    "CAM-006":
+        "assets/audio/CAM-006-audio.wav",
+
+    "CAM-007":
+        "assets/audio/CAM-007-audio.wav",
+
+    "CAM-009":
+        "assets/audio/CAM-009-audio.wav"
+
+};
+
+
+const modalAudio =
+    new Audio();
+
+
+modalAudio.loop =
+    true;
+
+
+modalAudio.volume =
+    0.25;
+
+
+function playModalAudio(
+    camId
+) {
+
+    const audioSource =
+        MODAL_AUDIO[
+        camId
+        ];
+
+
+    if (
+        !audioSource
+    ) {
+
+        return;
+
+    }
+
+
+    modalAudio.pause();
+
+
+    modalAudio.src =
+        audioSource;
+
+
+    modalAudio.currentTime =
+        0;
+
+
+    modalAudio.play()
+        .catch(
+            () => { }
+        );
+
+}
+
+
+function stopModalAudio() {
+
+    modalAudio.pause();
+
+
+    modalAudio.currentTime =
+        0;
+
+
+    modalAudio.removeAttribute(
+        "src"
+    );
+
+
+    modalAudio.load();
+
+}
+
 
 /*====================================
 CAM MODAL STATE
@@ -834,7 +933,10 @@ function openModal(
 
 
     modalDescription.textContent =
-        monitor.dataset.description;
+        monitor.dataset.description.replace(
+            ". ",
+            ".\n"
+        );
 
 
     modal.classList.add(
@@ -844,6 +946,12 @@ function openModal(
 
     document.body.classList.add(
         "modal-open"
+    );
+
+    /* MODAL AUDIO */
+
+    playModalAudio(
+        monitor.dataset.id
     );
 
 }
@@ -863,6 +971,8 @@ function closeModal() {
     document.body.classList.remove(
         "modal-open"
     );
+
+    stopModalAudio();
 
 
     resetModalMedia();
