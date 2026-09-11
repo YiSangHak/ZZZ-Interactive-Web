@@ -2191,3 +2191,19 @@ PORTRAIT MOBILE / TABLET
     }
 
 }
+
+/*====================================
+TOUCH DEVICE CURSOR DISABLE
+====================================*/
+
+@media (pointer: coarse) {
+
+    #crosshair,
+    #cursor-ui,
+    #info-panel {
+
+        display: none !important;
+
+    }
+
+}
