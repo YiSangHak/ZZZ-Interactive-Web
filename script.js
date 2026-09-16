@@ -92,7 +92,7 @@ const MODAL_AUDIO = {
 
     "CAM-001":
         "assets/audio/CAM-001-audio.wav",
-    
+
     "CAM-002":
         "assets/audio/CAM-002-audio.wav",
 
@@ -982,6 +982,14 @@ function closeModal() {
         false;
 
 }
+
+/* ===============================
+PUBLIC API
+=============================== */
+
+window.ZZZ = window.ZZZ || {};
+
+window.ZZZ.closeModal = closeModal;
 
 
 /*====================================

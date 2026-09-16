@@ -122,6 +122,10 @@ normalAudio.volume =
     0.45;
 
 
+const WARNING_AUDIO_REPEAT_COUNT =
+    1;
+
+
 const warningAudio =
     new Audio(
         "assets/audio/CAM-005-warning.wav"
@@ -129,11 +133,18 @@ const warningAudio =
 
 
 warningAudio.loop =
-    true;
+    false;
 
 
 warningAudio.volume =
     0.55;
+
+
+let warningAudioPlayCount =
+    0;
+
+let warningAudioSequenceActive =
+    false;
 
 
 function playNormalAudio() {
@@ -165,12 +176,19 @@ function stopNormalAudio() {
 function playWarningAudio() {
 
     if (
-        !warningAudio.paused
+        warningAudioSequenceActive
     ) {
 
         return;
 
     }
+
+
+    warningAudioSequenceActive =
+        true;
+
+    warningAudioPlayCount =
+        0;
 
 
     warningAudio.currentTime =
@@ -179,10 +197,54 @@ function playWarningAudio() {
 
     warningAudio.play()
         .catch(
-            () => { }
+            () => {
+
+                warningAudioSequenceActive =
+                    false;
+
+            }
         );
 
 }
+
+
+warningAudio.addEventListener(
+    "ended",
+    () => {
+
+        warningAudioPlayCount++;
+
+
+        if (
+            warningAudioPlayCount <
+            WARNING_AUDIO_REPEAT_COUNT
+        ) {
+
+            warningAudio.currentTime =
+                0;
+
+
+            warningAudio.play()
+                .catch(
+                    () => {
+
+                        warningAudioSequenceActive =
+                            false;
+
+                    }
+                );
+
+
+            return;
+
+        }
+
+
+        warningAudioSequenceActive =
+            false;
+
+    }
+);
 
 
 function stopWarningAudio() {
@@ -191,6 +253,12 @@ function stopWarningAudio() {
 
     warningAudio.currentTime =
         0;
+
+    warningAudioPlayCount =
+        0;
+
+    warningAudioSequenceActive =
+        false;
 
 }
 
@@ -1586,7 +1654,36 @@ function updateAudioFeedback(
 
         stopNormalAudio();
 
-        playWarningAudio();
+
+        const pendingWarningSubjects =
+            completedSubjects.filter(
+                item =>
+                    item.subject
+                        .warning &&
+                    !item.subject
+                        .audioFeedbackPlayed
+            );
+
+
+        if (
+            pendingWarningSubjects.length >
+            0
+        ) {
+
+            playWarningAudio();
+
+
+            pendingWarningSubjects.forEach(
+                item => {
+
+                    item.subject
+                        .audioFeedbackPlayed =
+                        true;
+
+                }
+            );
+
+        }
 
 
         /*
