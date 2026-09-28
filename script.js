@@ -85,6 +85,50 @@ let isModalOpen =
     false;
 
 /*====================================
+GRID AMBIENT AUDIO
+====================================*/
+
+const gridAmbientAudio =
+    new Audio(
+        "assets/audio/CAM-grid-ambient.wav"
+    );
+
+
+gridAmbientAudio.loop =
+    true;
+
+
+gridAmbientAudio.volume =
+    1;
+
+
+function playGridAmbient() {
+
+    gridAmbientAudio.play()
+        .catch(
+            () => { }
+        );
+
+}
+
+
+function pauseGridAmbient() {
+
+    gridAmbientAudio.pause();
+
+}
+
+
+function stopGridAmbient() {
+
+    gridAmbientAudio.pause();
+
+    gridAmbientAudio.currentTime =
+        0;
+
+}
+
+/*====================================
 MODAL AUDIO
 ====================================*/
 
@@ -735,9 +779,14 @@ function openModal(
         true;
 
 
+    pauseGridAmbient();
+
+
     cancelAnimationFrame(
         animation
     );
+
+
 
 
     clearTimeout(
@@ -956,6 +1005,8 @@ function openModal(
         "modal-open"
     );
 
+
+
     /* MODAL AUDIO */
 
     playModalAudio(
@@ -989,6 +1040,8 @@ function closeModal() {
     isModalOpen =
         false;
 
+    playGridAmbient();
+
 }
 
 /* ===============================
@@ -997,7 +1050,14 @@ PUBLIC API
 
 window.ZZZ = window.ZZZ || {};
 
-window.ZZZ.closeModal = closeModal;
+window.ZZZ.closeModal =
+    closeModal;
+
+window.ZZZ.playGridAmbient =
+    playGridAmbient;
+
+window.ZZZ.stopGridAmbient =
+    stopGridAmbient;
 
 
 /*====================================
