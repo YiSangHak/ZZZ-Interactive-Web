@@ -124,7 +124,7 @@ modalAudio.loop =
 
 
 modalAudio.volume =
-    0.25;
+    1;
 
 
 function playModalAudio(

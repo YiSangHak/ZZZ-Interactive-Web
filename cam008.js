@@ -55,7 +55,7 @@
 
 
     gameAudio.volume =
-        0.15;
+        1;
 
 
     const gameOverAudio =
@@ -65,7 +65,7 @@
 
 
     gameOverAudio.volume =
-        0.6;
+        1;
 
 
     const jumpAudio =
@@ -75,7 +75,7 @@
 
 
     jumpAudio.volume =
-        0.4;
+        1;
 
 
     function playGameAudio() {

@@ -119,7 +119,7 @@ const normalAudio =
 
 
 normalAudio.volume =
-    0.45;
+    1;
 
 
 const WARNING_AUDIO_REPEAT_COUNT =
@@ -137,7 +137,7 @@ warningAudio.loop =
 
 
 warningAudio.volume =
-    0.55;
+    1;
 
 
 let warningAudioPlayCount =
