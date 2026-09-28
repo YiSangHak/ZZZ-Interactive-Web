@@ -849,6 +849,14 @@ function openModal(
         window.isCam005ModalOpen =
             true;
 
+        if (
+            window.ZZZ?.resetCam005Analysis
+        ) {
+
+            window.ZZZ.resetCam005Analysis();
+
+        }
+
 
         const monitorVideo =
             monitor.querySelector(

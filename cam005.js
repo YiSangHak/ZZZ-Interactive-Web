@@ -321,6 +321,71 @@ const subjects = [];
 
 
 /*====================================
+RESET ANALYSIS
+====================================*/
+
+function resetAnalysis() {
+
+    const now =
+        performance.now();
+
+    subjects.forEach(
+        subject => {
+
+            subject.analysisStartedAt =
+                now;
+
+            subject.sleepScore =
+                null;
+
+            subject.analysisComplete =
+                false;
+
+            subject.warning =
+                false;
+
+            subject.audioFeedbackPlayed =
+                false;
+
+        }
+    );
+
+
+    stopNormalAudio();
+
+    stopWarningAudio();
+
+
+    applyGlobalWarning(
+        false
+    );
+
+
+    if (
+        subjects.length > 0
+    ) {
+
+        setState(
+            "ANALYZING"
+        );
+
+    }
+
+}
+
+
+/*====================================
+PUBLIC API
+====================================*/
+
+window.ZZZ =
+    window.ZZZ || {};
+
+window.ZZZ.resetCam005Analysis =
+    resetAnalysis;
+
+
+/*====================================
 UTILITY
 ====================================*/
 
