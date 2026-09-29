@@ -44,6 +44,15 @@ function enterExperience() {
 
     introScreen.classList.add("hidden");
 
+    if (
+        window.ZZZ &&
+        typeof window.ZZZ.playGridAmbient === "function"
+    ) {
+
+        window.ZZZ.playGridAmbient();
+
+    }
+
 
     resetInactivityTimer();
 
@@ -77,6 +86,8 @@ function returnToIntro() {
     ) {
 
         window.ZZZ.closeModal();
+
+        window.ZZZ.stopGridAmbient()
 
     }
 
