@@ -1,0 +1,73 @@
+/*====================================
+MONITOR WALL
+====================================*/
+.monitor-wall {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0;
+  padding: 0;
+}
+
+.monitor {
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  background: var(--color-monitor);
+  border: var(--border);
+  transition: 0.3s;
+}
+
+.monitor:hover {
+  border-color: var(--color-system);
+  border-width: 2px;
+  z-index: 10;
+}
+
+.monitor:hover .label {
+  border-color: var(--color-system);
+  color: var(--color-system);
+}
+
+.monitor video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  color: var(--color-white);
+  font-size: var(--font-sm);
+  background: var(--color-overlay);
+  border: var(--border);
+  padding: 6px 10px;
+  z-index: 10;
+}
+
+.cam-id {
+  font-size: var(--font-sm);
+  font-family: var(--font-mono);
+}
+
+/*====================================
+CAM001
+====================================*/
+#cam001 {
+  position: relative;
+  overflow: hidden;
+  background: #111111;
+}
+
+#cam001-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #111111;
+}

@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+html,
+body,
+* {
+  cursor: none !important;
+}
+
+img,
+video {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+:root {
+  /* Colors */
+  --color-bg: #000000;
+  --color-white: #ffffff;
+  --color-border: rgba(255, 255, 255, 0.8);
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-ring-bg: rgba(255, 255, 255, 0.15);
+  --color-system: #8aff8a;
+  --color-monitor: #111111;
+
+  /* Font */
+  --font-main: "JetBrains Mono", "Pretendard", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Font Size */
+  --font-xs: 9px;
+  --font-sm: 12px;
+  --font-progress: 12px;
+
+  /* Border */
+  --border: 0.5px solid var(--color-border);
+
+  /* Cursor */
+  --cursor-size: 48px;
+  --ring-size: 48px;
+  --ring-radius: 18;
+  --ring-length: 113;
+  --cursor-offset: 24px;
+  --info-panel-offset: 8px;
+
+  /* CAM005 Camera */
+  --cam005-camera-filter: brightness(1.07) contrast(0.97) saturate(0.98) blur(0.5px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-bg);
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-main);
+  cursor: none;
+  user-select: none;
+  -webkit-user-select: none;
+}

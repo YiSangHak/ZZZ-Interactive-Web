@@ -1,0 +1,143 @@
+/*====================================
+CROSSHAIR
+====================================*/
+#crosshair {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 50000;
+}
+
+#crosshair .line {
+  position: absolute;
+  background: var(--color-system);
+}
+
+#crosshair .horizontal {
+  top: 50%;
+  left: 0;
+  width: 20px;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+#crosshair .vertical {
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 20px;
+  transform: translateX(-50%);
+}
+
+/*====================================
+CURSOR UI
+====================================*/
+#cursor-ui {
+  position: fixed;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  display: none;
+  z-index: 300001;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  transition: opacity 0.2s ease;
+}
+
+.ring-bg {
+  fill: none;
+  stroke: var(--color-ring-bg);
+  stroke-width: 2;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--color-system);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: var(--ring-length);
+  stroke-dashoffset: var(--ring-length);
+}
+
+#progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-system);
+  font-size: var(--font-progress);
+  font-family: var(--font-mono);
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+/*====================================
+INFO PANEL
+====================================*/
+#info-panel {
+  position: fixed;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(var(--info-panel-offset)) scale(0.97);
+  max-width: 360px;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.82);
+  border: 1px solid var(--color-system);
+  backdrop-filter: blur(12px);
+  color: var(--color-system);
+  pointer-events: none;
+  z-index: 10000;
+}
+
+#info-panel.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0s;
+}
+
+#info-cam {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+#info-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+#info-description {
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/*====================================
+TYPE CURSOR
+====================================*/
+.cursor {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--color-system);
+  animation: blink 0.8s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
