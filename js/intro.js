@@ -1,4 +1,4 @@
-import { appConfig } from "./config.js";
+import { appConfig, isMobileExperience } from "./config.js";
 import { closeModal } from "./modal.js";
 import { playGridAmbient, stopGridAmbient } from "./core/audio.js";
 
@@ -67,7 +67,7 @@ INACTIVITY TIMER
 =============================== */
 
 function resetInactivityTimer() {
-  if (!session.active) return;
+  if (!session.active || isMobileExperience) return;
 
   clearInactivityTimer();
 
@@ -168,3 +168,5 @@ INITIAL STATE
 session.active = false;
 clearInactivityTimer();
 introScreen.classList.remove("hidden");
+
+if (isMobileExperience) enterExperience();

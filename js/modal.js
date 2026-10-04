@@ -1,3 +1,4 @@
+import { isMobileExperience } from "./config.js";
 import { appState, actions } from "./core/state.js";
 import {
   pauseGridAmbient,
@@ -39,6 +40,7 @@ function resetModalMedia() {
 }
 
 export function openModal(monitor) {
+  if (isMobileExperience) return;
   pauseGridAmbient();
   resetModalMedia();
   appState.activeCameraId = monitor.id || monitor.dataset.id.toLowerCase().replace("-", "");

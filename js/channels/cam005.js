@@ -1,3 +1,4 @@
+import { createAudio } from "../core/audio.js";
 import { appState, actions } from "../core/state.js";
 import { randomInteger } from "../core/math.js";
 import { cam005Config } from "../config.js";
@@ -41,9 +42,9 @@ const modalFooter = document.getElementById("modal-footer");
 const modalVideoWrapper = document.querySelector(".modal-video-wrapper");
 
 // AUDIO
-const normalAudio = new Audio("assets/audio/CAM-005-normal.wav");
+const normalAudio = createAudio("assets/audio/CAM-005-normal.wav");
 normalAudio.volume = 1;
-const warningAudio = new Audio("assets/audio/CAM-005-warning.wav");
+const warningAudio = createAudio("assets/audio/CAM-005-warning.wav");
 warningAudio.loop = false;
 warningAudio.volume = 1;
 let warningAudioPlayCount = 0;

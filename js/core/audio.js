@@ -1,7 +1,8 @@
-import { appConfig, modalAudioSources } from "../config.js";
+import { appConfig, modalAudioSources, isMobileExperience } from "../config.js";
 
 export function createAudio(source, { loop = false, volume = 1 } = {}) {
   const audio = new Audio(source);
+  audio.muted = isMobileExperience;
   audio.loop = loop;
   audio.volume = volume;
   return audio;
@@ -10,6 +11,7 @@ export function createAudio(source, { loop = false, volume = 1 } = {}) {
 // Browsers may reject playback until the visitor interacts with the page.
 
 export function playAudio(audio) {
+  if (isMobileExperience && audio instanceof HTMLAudioElement) return;
   audio.play().catch(() => {});
 }
 

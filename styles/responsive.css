@@ -306,3 +306,100 @@ TOUCH DEVICE CURSOR DISABLE
     display: none !important;
   }
 }
+
+/* Mobile visitors stay on the live camera in the natural device orientation. */
+html.mobile-tracking,
+html.mobile-tracking body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+html.mobile-tracking body {
+  position: fixed;
+  inset: 0;
+  transform: none;
+}
+
+.mobile-tracking #intro-screen,
+.mobile-tracking #video-modal,
+.mobile-tracking #crosshair,
+.mobile-tracking #cursor-ui,
+.mobile-tracking #info-panel,
+.mobile-tracking .monitor:not(#cam005) {
+  display: none !important;
+}
+
+.mobile-tracking .monitor-wall {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  aspect-ratio: auto;
+  transform: none;
+  display: block;
+}
+
+.mobile-tracking #cam005 {
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+/* Cover both surfaces with the same crop so tracking stays aligned. */
+.mobile-tracking #webcam,
+.mobile-tracking #tracking-canvas {
+  object-fit: cover;
+}
+
+.mobile-tracking #cam005 {
+  border: 0 !important;
+}
+
+.mobile-tracking #cam005 .label,
+.mobile-tracking #cam005-status {
+  display: none;
+}
+
+#capture-button,
+#capture-message {
+  display: none;
+}
+
+.mobile-tracking #capture-button {
+  display: block;
+  position: absolute;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  min-height: 48px;
+  padding: 12px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font: 500 14px var(--font-main);
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.mobile-tracking #capture-button:disabled { opacity: 0.5; }
+.mobile-tracking #capture-button:active { background: rgba(255, 255, 255, 0.2); }
+.mobile-tracking #capture-button:focus-visible { outline: 2px solid var(--color-system); outline-offset: 4px; }
+
+.mobile-tracking #capture-message:not(:empty) {
+  display: block;
+  position: absolute;
+  bottom: calc(max(24px, env(safe-area-inset-bottom)) + 60px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(90%, 360px);
+  padding: 8px 12px;
+  z-index: 20;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 12px;
+  text-align: center;
+}

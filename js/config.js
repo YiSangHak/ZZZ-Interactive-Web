@@ -1,3 +1,9 @@
+// Keep the mobile experience stable when the device rotates.
+export const isMobileExperience = window.matchMedia(
+  "(max-width: 1024px) and (pointer: coarse)",
+).matches;
+document.documentElement.classList.toggle("mobile-tracking", isMobileExperience);
+
 // Durations are milliseconds unless the setting describes animation physics.
 
 export const appConfig = Object.freeze({

@@ -1,3 +1,4 @@
+import { createAudio } from "../core/audio.js";
 import { appState } from "../core/state.js";
 import { clamp, randomRange } from "../core/math.js";
 import { cam008Config } from "../config.js";
@@ -35,12 +36,12 @@ const sheepImage = new Image();
 sheepImage.src = "assets/images/cam008-sheep.png";
 const fenceImage = new Image();
 fenceImage.src = "assets/images/cam008-fence.png";
-const gameAudio = new Audio("assets/audio/CAM-008-audio.mp3");
+const gameAudio = createAudio("assets/audio/CAM-008-audio.mp3");
 gameAudio.loop = true;
 gameAudio.volume = 1;
-const gameOverAudio = new Audio("assets/audio/CAM-008-gameover.wav");
+const gameOverAudio = createAudio("assets/audio/CAM-008-gameover.wav");
 gameOverAudio.volume = 1;
-const jumpAudio = new Audio("assets/audio/CAM-008-jump.wav");
+const jumpAudio = createAudio("assets/audio/CAM-008-jump.wav");
 jumpAudio.volume = 1;
 
 function playGameAudio() {
