@@ -638,6 +638,7 @@ async function detectFace() {
   // FACE DETECTION
   const result = faceLandmarker.detectForVideo(webcam, performance.now());
   const detectedFaces = result.faceLandmarks.slice(0, MAX_SUBJECTS).map(getFaceData);
+  appState.faceRegions = detectedFaces.map(({ minX, minY, maxX, maxY }) => [minX, minY, maxX, maxY]);
   // NO SUBJECT
   if (detectedFaces.length === 0) {
     cam005State.trackingStarted = false;

@@ -5,6 +5,7 @@ if (isMobileExperience) {
   const button = document.getElementById("capture-button");
   const message = document.getElementById("capture-message");
   const video = document.getElementById("webcam");
+  const beauty = document.getElementById("beauty-canvas");
   const overlay = document.getElementById("tracking-canvas");
   let messageTimer;
 
@@ -34,7 +35,8 @@ if (isMobileExperience) {
       const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
       const image = captureTrackingFrame(video, overlay,
         Math.max(1, Math.round(width * pixelRatio)),
-        Math.max(1, Math.round(height * pixelRatio)));
+        Math.max(1, Math.round(height * pixelRatio)),
+        document.documentElement.classList.contains("beauty-ready") ? beauty : null);
       const blob = await new Promise((resolve) => image.toBlob(resolve, "image/png"));
       if (!blob) throw new Error("Image capture failed");
       const url = URL.createObjectURL(blob);

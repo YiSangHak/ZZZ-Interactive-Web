@@ -1,3 +1,4 @@
+import "./mobile-beauty.js";
 import "./mobile-capture.js";
 import "./channels/cam001.js";
 import "./channels/cam007.js";
