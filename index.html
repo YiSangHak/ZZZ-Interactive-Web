@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>ZZZ</title>
     <link rel="icon" type="image/svg+xml" href="assets/images/intro-logo.svg" />
+    <script>
+      // Choose the mobile view before the browser paints the first frame.
+      document.documentElement.classList.toggle(
+        "mobile-tracking",
+        window.matchMedia("(max-width: 1024px) and (pointer: coarse)").matches,
+      );
+    </script>
     <link rel="stylesheet" href="styles/main.css" />
   </head>
 

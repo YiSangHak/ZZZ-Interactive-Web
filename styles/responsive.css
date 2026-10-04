@@ -308,6 +308,11 @@ TOUCH DEVICE CURSOR DISABLE
 }
 
 /* Mobile visitors stay on the live camera in the natural device orientation. */
+html.mobile-tracking {
+  /* Gentle camera smoothing and tone correction; tracking stays unfiltered. */
+  --cam005-camera-filter: brightness(1.08) contrast(0.94) saturate(1.03) blur(1.2px);
+}
+
 html.mobile-tracking,
 html.mobile-tracking body {
   width: 100%;
