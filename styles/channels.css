@@ -192,6 +192,7 @@ CAM007 CAMERA HUD
   justify-content: center;
   overflow: hidden;
   container-type: size;
+  --cam007-unit: min(1cqw, 1.6cqh, 10px);
   background: #090b09;
   color: #dce4dc;
   font-family: var(--font-mono);
@@ -201,9 +202,9 @@ CAM007 CAMERA HUD
   position: absolute;
   top: 25%;
   bottom: 22%;
-  width: 1.2cqw;
+  width: calc(1.2 * var(--cam007-unit));
   border-left: 1px solid #dce4dc;
-  background: repeating-linear-gradient(to bottom, #dce4dc 0 1px, transparent 1px 2cqw);
+  background: repeating-linear-gradient(to bottom, #dce4dc 0 1px, transparent 1px calc(2 * var(--cam007-unit)));
   opacity: 0.5;
 }
 .cam007-screen::before { left: 3%; }
@@ -211,8 +212,8 @@ CAM007 CAMERA HUD
 .cam007-content {
   --signal-color: #ff5550;
   position: relative;
-  width: 84%;
-  height: 79%;
+  width: min(84%, 900px);
+  height: min(79%, 560px);
   margin-top: 4%;
   font-variant-numeric: tabular-nums;
 }
@@ -221,32 +222,33 @@ CAM007 CAMERA HUD
   inset: 0 0 auto;
   display: flex;
   justify-content: space-between;
-  font-size: 1.9cqw;
+  font-size: calc(1.9 * var(--cam007-unit));
   font-weight: 700;
   letter-spacing: -0.035em;
 }
 .cam007-header::after {
   content: "";
   position: absolute;
-  top: 3.7cqw;
+  top: calc(3.7 * var(--cam007-unit));
   left: 0;
   width: 100%;
-  height: 2.7cqw;
-  background: repeating-linear-gradient(90deg, #dce4dc 0 1px, transparent 1px 2.4cqw);
+  height: calc(2.7 * var(--cam007-unit));
+  background: repeating-linear-gradient(90deg, #dce4dc 0 1px, transparent 1px calc(2.4 * var(--cam007-unit)));
 }
 .cam007-state {
   position: absolute;
   top: 21%;
   left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 1.1cqw;
-  font-size: 1.9cqw;
+  gap: calc(1.1 * var(--cam007-unit));
+  font-size: calc(1.9 * var(--cam007-unit));
   font-weight: 700;
   letter-spacing: 0.01em;
 }
-.cam007-state::before { content: ""; width: 1.4cqw; height: 1.4cqw; border-radius: 50%; background: var(--signal-color); }
-.cam007-state::after { content: "+"; position: absolute; left: 41cqw; font-size: 3cqw; font-weight: 400; }
+.cam007-state::before { content: ""; width: calc(1.4 * var(--cam007-unit)); height: calc(1.4 * var(--cam007-unit)); border-radius: 50%; background: var(--signal-color); }
+.cam007-state::after { content: "+"; position: absolute; left: 50%; transform: translateX(-50%); font-size: calc(3 * var(--cam007-unit)); font-weight: 400; }
 .cam007-main {
   position: absolute;
   top: 33%;
@@ -257,7 +259,7 @@ CAM007 CAMERA HUD
   white-space: nowrap;
   color: #dce4dc;
   font-family: var(--font-mono);
-  font-size: 7.2cqw;
+  font-size: calc(7.2 * var(--cam007-unit));
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.055em;
@@ -289,7 +291,7 @@ CAM007 CAMERA HUD
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.7cqw;
+  font-size: calc(1.7 * var(--cam007-unit));
   font-weight: 700;
 }
 .cam007-status-row span:last-child { color: var(--signal-color); }
@@ -301,16 +303,16 @@ CAM007 CAMERA HUD
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.7cqw 2cqw;
+  gap: calc(0.7 * var(--cam007-unit)) calc(2 * var(--cam007-unit));
   color: #a1afa1;
-  font-size: 1.55cqw;
+  font-size: calc(1.55 * var(--cam007-unit));
   line-height: 1.2;
   font-weight: 500;
 }
 .cam007-meta span:nth-child(even) { text-align: right; }
-.cam007-small { position: absolute; bottom: -3%; width: 100%; text-align: center; color: #778477; font-size: 1.35cqw; letter-spacing: 0.02em; }
+.cam007-small { position: absolute; bottom: -3%; width: 100%; text-align: center; color: #778477; font-size: calc(1.35 * var(--cam007-unit)); letter-spacing: 0.02em; }
 .cam007-logo { position: absolute; top: 30%; left: 0; width: 100%; height: 23%; display: none; align-items: center; justify-content: center; }
-.cam007-logo img { display: block; width: 48cqw; height: auto; max-height: 100%; object-fit: contain; }
+.cam007-logo img { display: block; width: calc(48 * var(--cam007-unit)); height: auto; max-height: 100%; object-fit: contain; }
 .cam007-logo img.signal-lock { animation: cam007SignalLock 0.35s ease-out both; }
 @keyframes cam007SignalLock { from { opacity: 0; } to { opacity: 1; } }
 .cam007-content:not([data-mode="searching"]) .cam007-scan-head { display: none; }
@@ -321,7 +323,14 @@ CAM007 CAMERA HUD
 .cam007-content[data-mode="retry"] .cam007-state::before { background: transparent; border: 1px solid var(--signal-color); }
 .cam007-content[data-mode="retry"] .cam007-spectrum svg { opacity: 0.3; }
 #modal-cam007-screen { display: none; }
-.cam007-content-modal { height: 82%; margin-top: 0; }
+.cam007-content-modal { --cam007-unit: min(1cqw, 1.6cqh); width: 84%; height: 82%; margin-top: 0; }
+
+/* Give wide grid tiles more breathing room without shrinking laptop tiles. */
+@container (min-width: 560px) {
+  .cam007-content:not(.cam007-content-modal) { width: min(76%, 900px); }
+}
+#cam007-screen::before { left: max(5%, calc((100% - 980px) / 2)); }
+#cam007-screen::after { right: max(5%, calc((100% - 980px) / 2)); }
 @media (prefers-reduced-motion: reduce) {
   .cam007-logo img.signal-lock { animation: none; }
   .cam007-scan-head, .cam007-progress-bar, .cam007-spectrum svg { transition: none; }

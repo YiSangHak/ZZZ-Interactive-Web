@@ -31,11 +31,20 @@ INTRO
 INTRO CONTENT
 ====================================*/
 .intro-content {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(680px, 80vw);
+  width: min(680px, 86%);
+  gap: clamp(36px, 6vh, 64px);
   text-align: center;
+}
+
+.intro-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /*====================================
@@ -43,13 +52,13 @@ INTRO LOGO
 ====================================*/
 .intro-logo {
   display: block;
-  width: 180px;
+  width: clamp(96px, 20vh, 180px);
   max-width: 30vw;
-  height: 180px;
+  height: clamp(96px, 20vh, 180px);
   max-height: 30vh;
   object-fit: contain;
   flex-shrink: 0;
-  margin-bottom: 48px;
+  margin-bottom: clamp(24px, 4vh, 40px);
   animation: introLogoRotate 10s linear infinite;
 }
 
@@ -72,7 +81,7 @@ INTRO COPY
 }
 
 .intro-title {
-  margin: 0 0 20px 0;
+  margin: 0 0 16px 0;
   color: var(--color-system);
   font-family: var(--font-mono);
   font-size: clamp(20px, 1.7vw, 28px);
@@ -86,7 +95,7 @@ INTRO COPY
   margin: 0;
   color: rgba(138, 255, 138, 0.68);
   font-family: var(--font-main);
-  font-size: clamp(13px, 1vw, 16px);
+  font-size: clamp(14px, 1.1vw, 17px);
   font-weight: 400;
   line-height: 1.6;
   word-break: keep-all;
@@ -96,14 +105,46 @@ INTRO COPY
 /*====================================
 INTRO ENTER
 ====================================*/
+.intro-guide {
+  font-family: var(--font-main);
+  word-break: keep-all;
+}
+
+.intro-guide-description {
+  color: var(--color-white);
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.75;
+}
+
 .intro-enter {
-  margin-top: 52px;
+  margin-top: clamp(28px, 4.5vh, 48px);
   color: var(--color-system);
   font-family: var(--font-mono);
   font-size: clamp(11px, 0.85vw, 13px);
   font-weight: 500;
   letter-spacing: 0.06em;
   animation: introEnterBlink 1.8s ease-in-out infinite;
+}
+
+@media (max-height: 600px) {
+  .intro-content { gap: 24px; }
+  .intro-logo { width: 88px; height: 88px; margin-bottom: 20px; }
+  .intro-title { margin-bottom: 12px; }
+  .intro-enter { margin-top: 16px; }
+}
+
+@media (orientation: portrait) and (max-width: 1024px) {
+  .intro-content { gap: 20px; }
+  .intro-logo { width: min(88px, 20vw); height: min(88px, 20vw); margin-bottom: 16px; }
+  .intro-title { margin-bottom: 10px; font-size: 20px; }
+  .intro-description { font-size: 12px; }
+  .intro-guide-description { font-size: 15px; line-height: 1.6; }
+  .intro-enter { margin-top: 20px; font-size: 10px; }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-logo, .intro-enter { animation: none; }
 }
 
 @keyframes introEnterBlink {

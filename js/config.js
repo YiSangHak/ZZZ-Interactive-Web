@@ -39,6 +39,9 @@ export const cam001Config = Object.freeze({
   EEG_LINE_COLOR: "rgba(255, 255, 255, 0.68)",
   EEG_LINE_WIDTH: 1.4,
   EEG_AMPLITUDE: 0.25,
+  EEG_GRAIN_OPACITY: 0.045,
+  EEG_SCANLINE_OPACITY: 0.12,
+  EEG_GRAIN_INTERVAL: 90,
 });
 
 export const cam005Config = Object.freeze({

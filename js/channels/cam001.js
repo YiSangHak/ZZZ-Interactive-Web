@@ -10,6 +10,9 @@ const {
   EEG_LINE_COLOR,
   EEG_LINE_WIDTH,
   EEG_AMPLITUDE,
+  EEG_GRAIN_OPACITY,
+  EEG_SCANLINE_OPACITY,
+  EEG_GRAIN_INTERVAL,
 } = cam001Config;
 
 // CAM001 EEG MONITOR
@@ -17,6 +20,45 @@ const cam001Canvas = document.getElementById("cam001-canvas");
 const cam001Ctx = cam001Canvas.getContext("2d");
 const modalCam001Canvas = document.getElementById("modal-cam001-canvas");
 const modalCam001Ctx = modalCam001Canvas.getContext("2d");
+
+// Reuse a small grain tile across both views instead of processing full frames.
+const grainCanvas = document.createElement("canvas");
+grainCanvas.width = grainCanvas.height = 128;
+const grainCtx = grainCanvas.getContext("2d");
+const grainPixels = grainCtx.createImageData(128, 128);
+const grainPatterns = new WeakMap();
+let lastGrainTime = -Infinity;
+
+function updateGrain(now) {
+  if (now - lastGrainTime < EEG_GRAIN_INTERVAL) return;
+  for (let i = 0; i < grainPixels.data.length; i += 4) {
+    const shade = Math.floor(Math.random() * 256);
+    grainPixels.data[i] = shade;
+    grainPixels.data[i + 1] = shade;
+    grainPixels.data[i + 2] = shade;
+    grainPixels.data[i + 3] = 255;
+  }
+  grainCtx.putImageData(grainPixels, 0, 0);
+  lastGrainTime = now;
+}
+
+function drawCRTBackground(context, width, height) {
+  if (!grainPatterns.has(context)) {
+    grainPatterns.set(context, context.createPattern(grainCanvas, "repeat"));
+  }
+  context.save();
+  context.globalAlpha = EEG_GRAIN_OPACITY;
+  context.fillStyle = grainPatterns.get(context);
+  context.fillRect(0, 0, width, height);
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  context.globalAlpha = EEG_SCANLINE_OPACITY;
+  context.fillStyle = "#000";
+  for (let y = 0; y < height; y += 4 * dpr) {
+    context.fillRect(0, y, width, dpr);
+  }
+  context.restore();
+}
 
 // CHANNEL DATA
 const eegChannels = Array.from(
@@ -108,6 +150,7 @@ function drawEEG(context, targetCanvas) {
   context.clearRect(0, 0, width, height);
   context.fillStyle = EEG_BG_COLOR;
   context.fillRect(0, 0, width, height);
+  drawCRTBackground(context, width, height);
   const rowHeight = height / EEG_CHANNEL_COUNT;
   eegChannels.forEach((channel, channelIndex) => {
     const history = channel.history;
@@ -138,6 +181,7 @@ function drawEEG(context, targetCanvas) {
 let lastSampleTime = performance.now();
 
 function animateEEG(now) {
+  updateGrain(now);
   /*
         화면 주사율과 독립적으로
         일정한 속도로 데이터 생성
