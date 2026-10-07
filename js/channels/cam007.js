@@ -37,6 +37,9 @@ function createScreen(container, isModal) {
   /* CONTENT */
   const content = document.createElement("div");
   content.className = isModal ? "cam007-content cam007-content-modal" : "cam007-content";
+  const header = document.createElement("div");
+  header.className = "cam007-header";
+  header.innerHTML = '<span>ZZZ / SIGNAL RECOVERY</span><span>RX 07 · AUTO</span>';
   /* STATE */
   const stateLabel = document.createElement("div");
   stateLabel.className = "cam007-state";
@@ -50,6 +53,25 @@ function createScreen(container, isModal) {
   logoImage.src = "assets/images/cam007-logo.svg";
   logoImage.alt = "ZZZ";
   logo.appendChild(logoImage);
+  const visual = document.createElement("div");
+  visual.className = "cam007-spectrum";
+  visual.setAttribute("aria-hidden", "true");
+  const svgNS = "http://www.w3.org/2000/svg";
+  const spectrum = document.createElementNS(svgNS, "svg");
+  spectrum.setAttribute("viewBox", "0 0 480 100");
+  spectrum.setAttribute("preserveAspectRatio", "none");
+  for (let index = 0; index < 60; index++) {
+    const height = 8 + Math.abs(Math.sin(index * 1.7) * Math.cos(index * 0.31)) * 65;
+    const bar = document.createElementNS(svgNS, "rect");
+    bar.setAttribute("x", String(index * 8 + 2));
+    bar.setAttribute("y", String((100 - height) / 2));
+    bar.setAttribute("width", "2");
+    bar.setAttribute("height", String(height));
+    spectrum.appendChild(bar);
+  }
+  const scanHead = document.createElement("div");
+  scanHead.className = "cam007-scan-head";
+  visual.append(spectrum, scanHead);
   /* STATUS */
   const statusRow = document.createElement("div");
   statusRow.className = isModal ? "cam007-status-row cam007-status-row-modal" : "cam007-status-row";
@@ -80,9 +102,11 @@ function createScreen(container, isModal) {
   const message = document.createElement("div");
   message.className = "cam007-small";
   /* ASSEMBLE */
+  content.appendChild(header);
   content.appendChild(stateLabel);
   content.appendChild(main);
   content.appendChild(logo);
+  content.appendChild(visual);
   content.appendChild(statusRow);
   content.appendChild(progressTrack);
   content.appendChild(meta);
@@ -117,9 +141,11 @@ const screens = [gridUI, modalUI].filter(Boolean);
 // RESET VISIBILITY
 
 function resetScreenVisibility(ui) {
+  ui.content.dataset.mode = state.mode.toLowerCase();
   ui.logo.style.display = "none";
-  ui.statusRow.style.display = "none";
-  ui.progressTrack.style.display = "none";
+  ui.statusRow.style.display = "flex";
+  ui.progressTrack.style.display = "block";
+  ui.progressBar.style.width = "0%";
   ui.meta.style.display = "grid";
   ui.message.style.display = "block";
   ui.stateLabel.classList.remove("warning");
@@ -132,12 +158,13 @@ function resetScreenVisibility(ui) {
 function renderSearching(ui) {
   resetScreenVisibility(ui);
   ui.stateLabel.textContent = "NO SIGNAL";
-  ui.main.textContent = "SEARCHING CHANNEL 07";
+  ui.main.textContent = "SEARCHING";
   ui.statusRow.style.display = "flex";
   ui.progressTrack.style.display = "block";
   ui.statusText.textContent = "SIGNAL SCAN";
   ui.progressText.textContent = `${Math.floor(state.progress)}%`;
   ui.progressBar.style.width = `${state.progress}%`;
+  ui.content.style.setProperty("--scan-position", `${state.progress}%`);
   ui.metaFrequency.textContent = `FREQ ${state.frequency.toFixed(3)} MHz`;
   ui.metaNode.textContent = "NODE UNKNOWN";
   ui.metaSync.textContent = "SYNC SCANNING";
@@ -151,7 +178,10 @@ function renderDetected(ui) {
   resetScreenVisibility(ui);
   ui.stateLabel.textContent = "SIGNAL DETECTED";
   ui.stateLabel.classList.add("detected");
-  ui.main.textContent = "REMOTE IDENTIFIER FOUND";
+  ui.main.textContent = "SIGNAL FOUND";
+  ui.statusText.textContent = "VERIFYING IDENTITY";
+  ui.progressText.textContent = "LOCKED";
+  ui.progressBar.style.width = "100%";
   ui.logo.style.display = "flex";
   /*
         CSS Animation 재시작
@@ -174,6 +204,8 @@ function renderFailed(ui) {
   ui.stateLabel.textContent = "CONNECTION FAILED";
   ui.stateLabel.classList.add("warning");
   ui.main.textContent = "SIGNAL LOST";
+  ui.statusText.textContent = "CONNECTION INTERRUPTED";
+  ui.progressText.textContent = "OFFLINE";
   ui.metaFrequency.textContent = `FREQ ${state.frequency.toFixed(3)} MHz`;
   ui.metaNode.textContent = "NODE UNKNOWN";
   ui.metaSync.textContent = "SYNC FAILED";
@@ -186,7 +218,9 @@ function renderFailed(ui) {
 function renderRetry(ui) {
   resetScreenVisibility(ui);
   ui.stateLabel.textContent = "RECOVERY PROTOCOL";
-  ui.main.textContent = "RETRYING CONNECTION...";
+  ui.main.textContent = "RECONNECTING";
+  ui.statusText.textContent = "REINITIALIZING RECEIVER";
+  ui.progressText.textContent = "RETRY";
   ui.metaFrequency.textContent = "FREQ RESET";
   ui.metaNode.textContent = "NODE UNKNOWN";
   ui.metaSync.textContent = "SYNC RESETTING";
@@ -223,6 +257,7 @@ function updateSearchDisplay() {
   screens.forEach((ui) => {
     ui.progressText.textContent = `${Math.floor(state.progress)}%`;
     ui.progressBar.style.width = `${state.progress}%`;
+    ui.content.style.setProperty("--scan-position", `${state.progress}%`);
     ui.metaFrequency.textContent = `FREQ ${state.frequency.toFixed(3)} MHz`;
   });
 }

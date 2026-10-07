@@ -1,5 +1,6 @@
 import { randomInteger } from "../core/math.js";
 import { cam009Config } from "../config.js";
+import { playTerminalKey, playTerminalResult } from "../core/audio.js";
 
 const {
   TYPE_SPEED_MIN,
@@ -131,6 +132,7 @@ async function typeLine(text, type = LINE_TYPE.COMMAND) {
   for (let index = 0; index < text.length; index++) {
     currentTypingLine.text += text[index];
     renderAll();
+    playTerminalKey();
     const character = text[index];
     /*
             SPACE나 기호 뒤에는
@@ -147,6 +149,7 @@ async function typeLine(text, type = LINE_TYPE.COMMAND) {
     type,
   });
   currentTypingLine = null;
+  playTerminalKey(true);
   while (terminalLines.length > MAX_LINES) {
     terminalLines.shift();
   }
@@ -158,6 +161,7 @@ async function typeLine(text, type = LINE_TYPE.COMMAND) {
 async function systemResponse(text, type = LINE_TYPE.RESPONSE) {
   await wait(randomInteger(LINE_DELAY_MIN, LINE_DELAY_MAX));
   addLine(`> ${text}`, type);
+  playTerminalResult(type);
 }
 
 // COMMAND GENERATORS

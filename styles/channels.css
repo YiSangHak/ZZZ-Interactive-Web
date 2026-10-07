@@ -181,14 +181,9 @@ CAM009 TERMINAL
 }
 
 /*====================================
-CAM007 SIGNAL SYSTEM
+CAM007 CAMERA HUD
 ====================================*/
-#cam007 {
-  position: relative;
-  overflow: hidden;
-  background: #111111;
-}
-
+#cam007 { position: relative; overflow: hidden; background: #090b09; }
 .cam007-screen {
   position: absolute;
   inset: 0;
@@ -196,203 +191,138 @@ CAM007 SIGNAL SYSTEM
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #111111;
-  color: var(--color-system);
+  container-type: size;
+  background: #090b09;
+  color: #dce4dc;
   font-family: var(--font-mono);
 }
-
+.cam007-screen::before, .cam007-screen::after {
+  content: "";
+  position: absolute;
+  top: 25%;
+  bottom: 22%;
+  width: 1.2cqw;
+  border-left: 1px solid #dce4dc;
+  background: repeating-linear-gradient(to bottom, #dce4dc 0 1px, transparent 1px 2cqw);
+  opacity: 0.5;
+}
+.cam007-screen::before { left: 3%; }
+.cam007-screen::after { right: 3%; transform: scaleX(-1); }
 .cam007-content {
+  --signal-color: #ff5550;
   position: relative;
-  width: min(72%, 340px);
+  width: 84%;
+  height: 79%;
+  margin-top: 4%;
+  font-variant-numeric: tabular-nums;
+}
+.cam007-header {
+  position: absolute;
+  inset: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  color: rgba(138, 255, 138, 0.72);
-}
-
-.cam007-state {
-  color: rgba(138, 255, 138, 0.48);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-}
-
-.cam007-state.detected {
-  color: var(--color-system);
-}
-
-.cam007-state.warning {
-  color: #ff4a4a;
-}
-
-.cam007-main {
-  color: var(--color-system);
-  font-size: 20px;
+  justify-content: space-between;
+  font-size: 1.9cqw;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.035em;
 }
-
+.cam007-header::after {
+  content: "";
+  position: absolute;
+  top: 3.7cqw;
+  left: 0;
+  width: 100%;
+  height: 2.7cqw;
+  background: repeating-linear-gradient(90deg, #dce4dc 0 1px, transparent 1px 2.4cqw);
+}
+.cam007-state {
+  position: absolute;
+  top: 21%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.1cqw;
+  font-size: 1.9cqw;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.cam007-state::before { content: ""; width: 1.4cqw; height: 1.4cqw; border-radius: 50%; background: var(--signal-color); }
+.cam007-state::after { content: "+"; position: absolute; left: 41cqw; font-size: 3cqw; font-weight: 400; }
+.cam007-main {
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  color: #dce4dc;
+  font-family: var(--font-mono);
+  font-size: 7.2cqw;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+.cam007-spectrum {
+  position: absolute;
+  top: 58%;
+  left: 0;
+  width: 100%;
+  height: 12%;
+  border-inline: 1px solid #dce4dc;
+  background: linear-gradient(#dce4dc, #dce4dc) center / 100% 1px no-repeat;
+}
+.cam007-spectrum svg { width: 100%; height: 100%; fill: #dce4dc; opacity: 0.65; transition: opacity 0.25s; }
+.cam007-scan-head {
+  position: absolute;
+  top: -12%;
+  bottom: -12%;
+  left: var(--scan-position, 0%);
+  width: 2px;
+  background: var(--signal-color);
+  transition: left 0.1s linear;
+}
+.cam007-scan-head::before { content: ""; position: absolute; top: -5px; left: -3px; border: 4px solid transparent; border-top-color: var(--signal-color); }
 .cam007-status-row {
+  position: absolute;
+  top: 74%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  font-size: 10px;
-  color: rgba(138, 255, 138, 0.58);
+  font-size: 1.7cqw;
+  font-weight: 700;
 }
-
-/*====================================
-CAM007 PROGRESS
-====================================*/
-.cam007-progress-track {
-  position: relative;
-  width: 100%;
-  height: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(138, 255, 138, 0.38);
-}
-
-.cam007-progress-bar {
-  width: 0;
-  height: 100%;
-  background: var(--color-system);
-  transition: width 0.08s linear;
-}
-
-/*====================================
-CAM007 META
-====================================*/
+.cam007-status-row span:last-child { color: var(--signal-color); }
+.cam007-progress-track { position: absolute; top: 81%; width: 100%; height: 2px; overflow: hidden; background: #303a30; }
+.cam007-progress-bar { width: 0; height: 100%; background: var(--signal-color); transition: width 0.08s linear; }
 .cam007-meta {
+  position: absolute;
+  top: 86%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 5px 16px;
-  color: rgba(138, 255, 138, 0.44);
-  font-size: 9px;
-  line-height: 1.4;
+  gap: 0.7cqw 2cqw;
+  color: #a1afa1;
+  font-size: 1.55cqw;
+  line-height: 1.2;
+  font-weight: 500;
 }
-
-/*====================================
-CAM007 MESSAGE
-====================================*/
-.cam007-small {
-  color: rgba(138, 255, 138, 0.36);
-  font-size: 9px;
-  letter-spacing: 0.03em;
-}
-
-/*====================================
-CAM007 SVG LOGO
-====================================*/
-.cam007-logo {
-  display: none;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  padding: 6px 0;
-}
-
-.cam007-logo img {
-  display: block;
-  width: 155px;
-  max-width: 70%;
-  height: auto;
-  opacity: 0.86;
-}
-
-.cam007-logo img.signal-lock {
-  animation: cam007SignalLock 2s ease-out both;
-}
-
-@keyframes cam007SignalLock {
-  0% {
-    opacity: 0;
-    transform: scale(0.985);
-  }
-
-  15% {
-    opacity: 0.35;
-  }
-
-  30% {
-    opacity: 0.75;
-    transform: scale(1.004);
-  }
-
-  45% {
-    opacity: 0.92;
-  }
-
-  70% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  100% {
-    opacity: 0.88;
-    transform: scale(1);
-  }
-}
-
-/*====================================
-CAM007 DETECTED
-====================================*/
-.cam007-content.signal-detected {
-  text-shadow: 0 0 6px rgba(138, 255, 138, 0.1);
-}
-
-/*====================================
-CAM007 VERY SUBTLE SCANLINE
-====================================*/
-#cam007::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 5px,
-    rgba(138, 255, 138, 0.012) 6px
-  );
-  z-index: 5;
-}
-
-/*====================================
-CAM007 MODAL
-====================================*/
-#modal-cam007-screen {
-  position: absolute;
-  inset: 0;
-  display: none;
-  background: #111111;
-}
-
-.cam007-content-modal {
-  width: min(68%, 620px);
-  gap: 18px;
-}
-
-.cam007-main-modal {
-  font-size: 36px;
-}
-
-.cam007-status-row-modal {
-  font-size: 14px;
-}
-
-.cam007-progress-track-modal {
-  height: 8px;
-}
-
-.cam007-logo-modal img {
-  width: 290px;
-  max-width: 58%;
-}
-
-.cam007-content-modal .cam007-meta {
-  gap: 8px 28px;
-  font-size: 13px;
-}
-
-.cam007-content-modal .cam007-small {
-  font-size: 12px;
+.cam007-meta span:nth-child(even) { text-align: right; }
+.cam007-small { position: absolute; bottom: -3%; width: 100%; text-align: center; color: #778477; font-size: 1.35cqw; letter-spacing: 0.02em; }
+.cam007-logo { position: absolute; top: 30%; left: 0; width: 100%; height: 23%; display: none; align-items: center; justify-content: center; }
+.cam007-logo img { display: block; width: 48cqw; height: auto; max-height: 100%; object-fit: contain; }
+.cam007-logo img.signal-lock { animation: cam007SignalLock 0.35s ease-out both; }
+@keyframes cam007SignalLock { from { opacity: 0; } to { opacity: 1; } }
+.cam007-content:not([data-mode="searching"]) .cam007-scan-head { display: none; }
+.cam007-content[data-mode="detected"] { --signal-color: #8aff8a; }
+.cam007-content[data-mode="detected"] .cam007-main { visibility: hidden; }
+.cam007-content[data-mode="failed"] .cam007-spectrum svg { opacity: 0.2; transform: scaleY(0.15); }
+.cam007-content[data-mode="failed"] .cam007-main { color: #ff6666; }
+.cam007-content[data-mode="retry"] .cam007-state::before { background: transparent; border: 1px solid var(--signal-color); }
+.cam007-content[data-mode="retry"] .cam007-spectrum svg { opacity: 0.3; }
+#modal-cam007-screen { display: none; }
+.cam007-content-modal { height: 82%; margin-top: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .cam007-logo img.signal-lock { animation: none; }
+  .cam007-scan-head, .cam007-progress-bar, .cam007-spectrum svg { transition: none; }
 }

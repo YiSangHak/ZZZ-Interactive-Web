@@ -8,6 +8,7 @@ export const appConfig = Object.freeze({
   descriptionTypeIntervalMs: 35,
   inactivityTimeoutMs: 60_000,
   activityThrottleMs: 1_000,
+  gridAmbientEnabled: false,
   ambientAudio: "assets/audio/CAM-grid-ambient.wav",
 });
 
@@ -25,10 +26,9 @@ export const modalAudioSources = Object.freeze({
   "CAM-001": "assets/audio/CAM-001-audio.wav",
   "CAM-002": "assets/audio/CAM-002-audio.wav",
   "CAM-003": "assets/audio/CAM-003-audio.wav",
-  "CAM-004": "assets/audio/CAM-004-audio.wav",
-  "CAM-006": "assets/audio/CAM-006-audio.wav",
+  "CAM-004": "assets/audio/CAM-004-audio.mp3",
+  "CAM-006": "assets/audio/CAM-006-audio.mp3",
   "CAM-007": "assets/audio/CAM-007-audio.wav",
-  "CAM-009": "assets/audio/CAM-009-audio.wav",
 });
 
 export const cam001Config = Object.freeze({
@@ -61,7 +61,7 @@ export const cam005Config = Object.freeze({
 export const cam007Config = Object.freeze({
   SEARCH_DURATION_MIN: 2800,
   SEARCH_DURATION_MAX: 4200,
-  DETECTED_DURATION: 2200,
+  DETECTED_DURATION: 3000,
   FAILED_DURATION: 1100,
   RETRY_DURATION: 950,
   FREQUENCY_MIN: 6.8,

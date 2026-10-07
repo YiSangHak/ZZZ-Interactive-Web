@@ -118,50 +118,6 @@ PORTRAIT MOBILE / TABLET
   }
 
   /*================================
-    CAM007 MOBILE
-    ================================*/
-  .cam007-content {
-    width: 72%;
-    gap: 4px;
-  }
-
-  .cam007-state {
-    font-size: 7px;
-  }
-
-  .cam007-main {
-    font-size: 13px;
-  }
-
-  .cam007-status-row {
-    gap: 6px;
-    font-size: 6px;
-  }
-
-  .cam007-progress-track {
-    height: 4px;
-  }
-
-  .cam007-meta {
-    gap: 2px 8px;
-    font-size: 5.5px;
-    line-height: 1.25;
-  }
-
-  .cam007-small {
-    font-size: 5.5px;
-  }
-
-  .cam007-logo {
-    padding: 2px 0;
-  }
-
-  .cam007-logo img {
-    width: 95px;
-    max-width: 62%;
-  }
-
-  /*================================
     CAM009 MOBILE
     ================================*/
   .cam009-terminal {
@@ -251,40 +207,6 @@ PORTRAIT MOBILE / TABLET
     width: 100%;
     aspect-ratio: 16 / 9;
     border-width: 1px;
-  }
-
-  /*================================
-    CAM007 MODAL MOBILE
-    ================================*/
-  .cam007-content-modal {
-    width: 72%;
-    gap: 7px;
-  }
-
-  .cam007-main-modal {
-    font-size: 20px;
-  }
-
-  .cam007-status-row-modal {
-    font-size: 8px;
-  }
-
-  .cam007-progress-track-modal {
-    height: 5px;
-  }
-
-  .cam007-logo-modal img {
-    width: 165px;
-    max-width: 52%;
-  }
-
-  .cam007-content-modal .cam007-meta {
-    gap: 3px 12px;
-    font-size: 7px;
-  }
-
-  .cam007-content-modal .cam007-small {
-    font-size: 7px;
   }
 
   /*================================
