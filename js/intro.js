@@ -7,6 +7,14 @@ ZZZ INTRO / SESSION CONTROLLER
 =============================== */
 const introScreen = document.getElementById("intro-screen");
 
+// A clipped copy creates a small local image shift as the CRT band passes.
+const scanBand = document.createElement("div");
+scanBand.className = "intro-scan-band";
+scanBand.setAttribute("aria-hidden", "true");
+scanBand.inert = true;
+scanBand.append(introScreen.querySelector(".intro-content").cloneNode(true));
+introScreen.append(scanBand);
+
 /* ===============================
 CONFIG
 =============================== */
