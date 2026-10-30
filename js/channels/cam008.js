@@ -173,7 +173,8 @@ function getGameSpeedMultiplier(count) {
 // RESET FENCE
 
 function resetFence(state, width, scale) {
-  state.fenceX = width + randomRange(100, 220) * scale;
+  const gap = state === game ? randomRange(40, 120) : randomRange(100, 220);
+  state.fenceX = width + gap * scale;
   state.counted = false;
   /*
         GRID DEMO만
@@ -332,7 +333,9 @@ function updateGame(width, height, dt) {
         Chrome Dino처럼 점차 빨라진다.
         */
   const speedMultiplier = getGameSpeedMultiplier(game.count);
-  game.fenceX -= GAME_BASE_SPEED * metrics.scale * speedMultiplier * dt;
+  // Keep the pace on wide exhibition screens where character scale is capped.
+  const movementScale = Math.max(metrics.scale, width / 800);
+  game.fenceX -= GAME_BASE_SPEED * movementScale * speedMultiplier * dt;
   updateJumpPhysics(game, metrics, dt);
   /*
         충돌
@@ -542,6 +545,7 @@ document.addEventListener("keydown", (event) => {
     return;
   }
   event.preventDefault();
+  if (event.repeat) return;
   handleGameAction();
 });
 
