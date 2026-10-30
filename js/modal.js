@@ -16,6 +16,30 @@ const title = document.getElementById("modal-title");
 const description = document.getElementById("modal-description");
 const footer = document.getElementById("modal-footer");
 const videoWrapper = document.querySelector(".modal-video-wrapper");
+const modalWindow = document.querySelector(".modal-window");
+const header = document.getElementById("modal-header");
+
+function fitModalMedia() {
+  // Portrait layouts use their own rotated viewport sizing.
+  if (window.matchMedia("(orientation: portrait) and (max-width: 1024px)").matches) {
+    modalWindow.style.removeProperty("--modal-media-width");
+    return;
+  }
+  const windowStyle = getComputedStyle(modalWindow);
+  const footerStyle = getComputedStyle(footer);
+  const availableHeight = window.innerHeight * 0.9
+    - parseFloat(windowStyle.paddingTop)
+    - parseFloat(windowStyle.paddingBottom)
+    - header.offsetHeight
+    - footer.offsetHeight
+    - parseFloat(footerStyle.marginTop);
+  modalWindow.style.setProperty("--modal-media-width", `${Math.max(0, Math.floor(availableHeight * 16 / 9))}px`);
+}
+
+const modalSizeObserver = new ResizeObserver(fitModalMedia);
+modalSizeObserver.observe(header);
+modalSizeObserver.observe(footer);
+window.addEventListener("resize", fitModalMedia);
 
 // Add custom channel surfaces here; ordinary video channels use the fallback.
 const surfaces = {
@@ -66,6 +90,7 @@ export function openModal(monitor) {
   cameraLabel.textContent = monitor.dataset.id;
   title.textContent = monitor.dataset.title;
   description.textContent = monitor.dataset.description.replace(". ", ".\n");
+  fitModalMedia();
   modal.classList.add("show");
   document.body.classList.add("modal-open");
   playModalAudio(monitor.dataset.id);

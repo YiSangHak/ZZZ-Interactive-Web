@@ -26,12 +26,12 @@ VIDEO MODAL
   display: flex;
   flex-direction: column;
   width: 80vw;
-  max-height: 94dvh;
-  overflow-y: auto;
+  max-height: 90dvh;
   padding: 28px;
 }
 
 #modal-header {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
 }
@@ -62,6 +62,7 @@ VIDEO MODAL
 }
 
 #modal-footer {
+  flex-shrink: 0;
   font-size: 13px;
   opacity: 0.7;
   color: var(--color-system);
@@ -71,7 +72,8 @@ VIDEO MODAL
 .modal-video-wrapper {
   position: relative;
   flex-shrink: 0;
-  width: 100%;
+  width: min(100%, var(--modal-media-width, 100%));
+  align-self: center;
   aspect-ratio: 16 / 9;
   background: #000;
   border: 2px solid var(--color-system);
