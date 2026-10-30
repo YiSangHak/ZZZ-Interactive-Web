@@ -151,6 +151,8 @@ PORTRAIT MOBILE / TABLET
   .modal-window {
     width: min(94%, calc((100vw - 58px) * 16 / 9));
     max-width: none;
+    max-height: none;
+    overflow-y: visible;
     padding: 8px 10px;
     margin: 0;
     justify-content: center;

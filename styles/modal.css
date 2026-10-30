@@ -25,7 +25,9 @@ VIDEO MODAL
 .modal-window {
   display: flex;
   flex-direction: column;
-  width: min(70vw, 1160px);
+  width: 80vw;
+  max-height: 94dvh;
+  overflow-y: auto;
   padding: 28px;
 }
 
@@ -68,6 +70,7 @@ VIDEO MODAL
 
 .modal-video-wrapper {
   position: relative;
+  flex-shrink: 0;
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
@@ -100,4 +103,15 @@ VIDEO MODAL
 /* CAM005 modal camera correction */
 #modal-video.cam005-feed {
   filter: var(--cam005-camera-filter);
+}
+
+/* Larger exhibition displays. */
+@media (min-width: 1440px) {
+  #modal-title {
+    font-size: 28px;
+  }
+
+  #modal-description {
+    font-size: 18px;
+  }
 }
