@@ -30,6 +30,13 @@ VIDEO MODAL
   padding: 28px;
 }
 
+#modal-header,
+#modal-footer {
+  width: min(100%, var(--modal-media-width, 100%));
+  align-self: center;
+  text-align: left;
+}
+
 #modal-header {
   flex-shrink: 0;
   display: flex;
