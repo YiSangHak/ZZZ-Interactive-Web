@@ -68,6 +68,8 @@ const demo = {
   velocityY: 0,
   grounded: true,
   fenceX: 0,
+  fenceColumns: 1,
+  fenceRows: 1,
   counted: false,
   autoJumped: false,
   time: 0,
@@ -81,6 +83,8 @@ const game = {
   velocityY: 0,
   grounded: true,
   fenceX: 0,
+  fenceColumns: 1,
+  fenceRows: 1,
   counted: false,
   time: 0,
 };
@@ -174,6 +178,10 @@ function getGameSpeedMultiplier(count) {
 
 function resetFence(state, width, scale) {
   const gap = state === game ? randomRange(40, 120) : randomRange(100, 220);
+  // Start with one fence; later groups are single, stacked, or side by side.
+  const variant = state === game && state.count >= 3 ? Math.random() : 0;
+  state.fenceColumns = variant >= 0.75 ? 2 : 1;
+  state.fenceRows = variant >= 0.5 && variant < 0.75 ? 2 : 1;
   state.fenceX = width + gap * scale;
   state.counted = false;
   /*
@@ -260,18 +268,34 @@ function isColliding(state, metrics) {
     width: metrics.sheepWidth * 0.76,
     height: metrics.sheepHeight * 0.78,
   };
-  const fenceBox = {
-    x: state.fenceX + metrics.fenceWidth * 0.15,
-    y: metrics.groundY - metrics.fenceHeight + metrics.fenceHeight * 0.05,
-    width: metrics.fenceWidth * 0.7,
-    height: metrics.fenceHeight * 0.95,
-  };
-  return (
-    sheepBox.x < fenceBox.x + fenceBox.width &&
-    sheepBox.x + sheepBox.width > fenceBox.x &&
-    sheepBox.y < fenceBox.y + fenceBox.height &&
-    sheepBox.y + sheepBox.height > fenceBox.y
-  );
+  return getFenceTiles(state, metrics).some((tile) => {
+    const fenceBox = {
+      x: tile.x + metrics.fenceWidth * 0.15,
+      y: tile.y + metrics.fenceHeight * 0.05,
+      width: metrics.fenceWidth * 0.7,
+      height: metrics.fenceHeight * 0.95,
+    };
+    return (
+      sheepBox.x < fenceBox.x + fenceBox.width &&
+      sheepBox.x + sheepBox.width > fenceBox.x &&
+      sheepBox.y < fenceBox.y + fenceBox.height &&
+      sheepBox.y + sheepBox.height > fenceBox.y
+    );
+  });
+}
+
+// Drawing and collision use the same individual fence positions.
+function getFenceTiles(state, metrics) {
+  const tiles = [];
+  for (let column = 0; column < state.fenceColumns; column++) {
+    for (let row = 0; row < state.fenceRows; row++) {
+      tiles.push({
+        x: state.fenceX + column * metrics.fenceWidth,
+        y: metrics.groundY - (row + 1) * metrics.fenceHeight,
+      });
+    }
+  }
+  return tiles;
 }
 
 // UPDATE GRID DEMO
@@ -350,14 +374,14 @@ function updateGame(width, height, dt) {
   /*
         Fence 통과 성공
         */
-  if (!game.counted && game.fenceX + metrics.fenceWidth < metrics.sheepX) {
+  if (!game.counted && game.fenceX + metrics.fenceWidth * game.fenceColumns < metrics.sheepX) {
     game.count++;
     game.counted = true;
   }
   /*
         다음 Fence
         */
-  if (game.fenceX + metrics.fenceWidth < 0) {
+  if (game.fenceX + metrics.fenceWidth * game.fenceColumns < 0) {
     resetFence(game, width, metrics.scale);
   }
 }
@@ -407,13 +431,15 @@ function drawScene(context, width, height, state, showCount) {
   }
   // FENCE
   if (fenceImage.complete && fenceImage.naturalWidth) {
-    context.drawImage(
-      fenceImage,
-      state.fenceX,
-      metrics.groundY - metrics.fenceHeight,
-      metrics.fenceWidth,
-      metrics.fenceHeight,
-    );
+    for (const tile of getFenceTiles(state, metrics)) {
+      context.drawImage(
+        fenceImage,
+        tile.x,
+        tile.y,
+        metrics.fenceWidth,
+        metrics.fenceHeight,
+      );
+    }
   }
 }
 
